@@ -1,6 +1,6 @@
 package com.springboot.bankbackend.entity;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 
 @Entity
 public class BankAccountEntity {

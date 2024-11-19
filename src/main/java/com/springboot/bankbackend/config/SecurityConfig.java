@@ -1,92 +1,101 @@
 package com.springboot.bankbackend.config;
 
 import com.springboot.bankbackend.service.auth.CustomUserDetailsService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+@EnableWebSecurity
 @Configuration
-@EnableMethodSecurity
-public class SecurityConfig {
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    public static final String AUTH_PATH = "/api/v1/auth/**";
-    public static final String ADMIN_PATH = "/api/v1/admin-dashboard/**";
+    /*
+    These lines declare constant strings AUTH_PATH and USER_PATH, representing the paths related to authentication and user-related resources, respectively.
+     */
+    public static final String AUTH_PATH= "/api/v1/auth/**";
+    public static final String ADMIN_PATH="/api/v1/admin-dashboard/**";
     public static final String USER_PATH = "/api/v1/nice-worlds/**";
 
+    /*
+    These lines declare two lists of strings, ALLOWED_METHODS and ALLOWED_HEADERS. These lists specify the HTTP methods and headers allowed for CORS (Cross-Origin Resource Sharing) configuration.
+     */
     private static final List<String> ALLOWED_METHODS = Arrays.asList("GET", "PUT", "POST", "DELETE", "OPTIONS", "PATCH");
     private static final List<String> ALLOWED_HEADERS = Arrays.asList("x-requested-with", "authorization", "Content-Type",
             "Authorization", "credential", "X-XSRF-TOKEN", "X-Refresh-Token", "X-Client-Id", "x-client-id");
 
-    private final JWTUtil jwtUtil;
-    private final CustomUserDetailsService userDetailsService;
+    @Autowired
+    private JWTUtil jwtUtil;
 
-    public SecurityConfig(JWTUtil jwtUtil, CustomUserDetailsService userDetailsService) {
-        this.jwtUtil = jwtUtil;
-        this.userDetailsService = userDetailsService;
+    @Autowired
+    private CustomUserDetailsService userDetailsService;
+
+    /*
+    - **`.csrf().disable()`**: Disables CSRF (Cross-Site Request Forgery) protection.
+    - **`.exceptionHandling()`**: Configures exception handling for security-related exceptions.
+    - **`.httpBasic().disable()`**: Disables HTTP Basic Authentication.
+    - **`.formLogin().disable()`**: Disables form-based login.
+    - **`.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)`**: Configures session management to be stateless, meaning no sessions will be created.
+    - **`.cors().configurationSource(request -> getCorsConfiguration())`**: Configures CORS (Cross-Origin Resource Sharing) using a custom CorsConfiguration source.
+    - **`.authorizeRequests()`**: Begins configuring request authorization rules.
+    - **`.antMatchers(AUTH_PATH).permitAll()`**: Specifies that requests to **`AUTH_PATH`** should be permitted without authentication.
+    - **`.antMatchers(USER_PATH).hasAuthority("user")`**: Specifies that requests to **`USER_PATH`** require the "user" authority.
+    - **`.anyRequest().authenticated()`**: Requires authentication for any other requests.
+    - Finally, a custom **`JwtAuthFilter`** is added before the **`UsernamePasswordAuthenticationFilter`**. This filter is responsible for JWT-based authentication.
+     */
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http.csrf().disable()
+                .exceptionHandling()
+                .and()
+                .httpBasic().disable()
+                .formLogin().disable()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .cors()
+                .configurationSource(request -> getCorsConfiguration())
+                .and()
+                .authorizeRequests()
+                .antMatchers(AUTH_PATH).permitAll()
+                .antMatchers(USER_PATH).hasAuthority("user")
+                .antMatchers(ADMIN_PATH).hasAuthority("admin")
+                .anyRequest().authenticated();
+        http.addFilterBefore(new JwtAuthFilter(jwtUtil,userDetailsService), UsernamePasswordAuthenticationFilter.class);
+
     }
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf(csrf -> csrf.disable())
-                .exceptionHandling(exceptionHandling -> exceptionHandling.disable())
-                .httpBasic(httpBasic -> httpBasic.disable())
-                .formLogin(formLogin -> formLogin.disable())
-                .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(AUTH_PATH).permitAll()
-                        .requestMatchers(USER_PATH).hasAuthority("user")
-                        .requestMatchers(ADMIN_PATH).hasAuthority("admin")
-                        .anyRequest().authenticated()
-                );
-
-        http.addFilterBefore(new JwtAuthFilter(jwtUtil, userDetailsService), UsernamePasswordAuthenticationFilter.class);
-        return http.build();
-    }
-
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
+    /*
+    creates a CorsConfiguration object with allowed headers, methods, origins, and credentials settings for CORS.
+     */
+    private CorsConfiguration getCorsConfiguration(){
         CorsConfiguration corsConfiguration = new CorsConfiguration();
         corsConfiguration.setAllowedHeaders(ALLOWED_HEADERS);
         corsConfiguration.setAllowedMethods(ALLOWED_METHODS);
         corsConfiguration.setAllowedOriginPatterns(Collections.singletonList("*"));
         corsConfiguration.setAllowCredentials(true);
 
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", corsConfiguration);
-        return source;
+        return corsConfiguration;
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
-        return authenticationConfiguration.getAuthenticationManager();
+    @Override
+    protected AuthenticationManager authenticationManager() throws Exception {
+        return super.authenticationManager();
     }
 
     @Bean
-    public BCryptPasswordEncoder bCryptPasswordEncoder() {
+    public BCryptPasswordEncoder bCryptPasswordEncoder(){
         return new BCryptPasswordEncoder();
-    }
-
-    @Bean
-    public DaoAuthenticationProvider daoAuthenticationProvider() {
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setUserDetailsService(userDetailsService);
-        provider.setPasswordEncoder(bCryptPasswordEncoder());
-        return provider;
     }
 }

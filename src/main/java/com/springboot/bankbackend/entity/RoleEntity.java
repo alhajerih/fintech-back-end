@@ -2,7 +2,7 @@ package com.springboot.bankbackend.entity;
 
 
 import com.springboot.bankbackend.utils.Roles;
-import jakarta.persistence.*;
+import javax.persistence.*;
 
 @Entity
 public class RoleEntity {

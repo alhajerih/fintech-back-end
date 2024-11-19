@@ -3,7 +3,7 @@ package com.springboot.bankbackend.entity;
 import com.springboot.bankbackend.utils.TransactionType;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import java.time.LocalDateTime;
-import jakarta.persistence.*;
+import javax.persistence.*;
 
 @Entity
 public class TransactionEntity {

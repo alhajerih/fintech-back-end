@@ -2,7 +2,7 @@ package com.springboot.bankbackend.entity;
 
 import com.springboot.bankbackend.utils.Roles;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import jakarta.persistence.*;
+import javax.persistence.*;
 
 import java.util.List;
 
