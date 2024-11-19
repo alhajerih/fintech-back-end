@@ -3,6 +3,8 @@ package com.springboot.bankbackend.entity;
 import jakarta.persistence.*;
 import jakarta.transaction.Status;
 import jdk.jshell.Snippet;
+import com.springboot.bankbackend.utils.Roles;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import java.util.List;
 
