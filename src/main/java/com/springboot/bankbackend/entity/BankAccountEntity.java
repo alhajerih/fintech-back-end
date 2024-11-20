@@ -1,6 +1,9 @@
 package com.springboot.bankbackend.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 public class BankAccountEntity {
@@ -12,9 +15,43 @@ public class BankAccountEntity {
     @Column(nullable = false)
     private Double balance;
 
-    @OneToOne
+    // card number and bank account number
+    private String cardNumber;
+    private String bankAccountNumber;
+
+    @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
+    @JsonBackReference
     private UserEntity user;
+
+    // Transactions
+    @OneToMany(mappedBy = "bankAccount")
+    private List<TransactionsEntity> transactions;
+
+
+    public List<TransactionsEntity> getTransactions() {
+        return transactions;
+    }
+
+    public void setTransactions(List<TransactionsEntity> transactions) {
+        this.transactions = transactions;
+    }
+
+    public String getCardNumber() {
+        return cardNumber;
+    }
+
+    public void setCardNumber(String cardNumber) {
+        this.cardNumber = cardNumber;
+    }
+
+    public String getBankAccountNumber() {
+        return bankAccountNumber;
+    }
+
+    public void setBankAccountNumber(String bankAccountNumber) {
+        this.bankAccountNumber = bankAccountNumber;
+    }
 
     public UserEntity getUser() {
         return user;

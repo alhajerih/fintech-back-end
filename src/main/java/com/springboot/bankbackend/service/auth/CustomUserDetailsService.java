@@ -1,5 +1,6 @@
 package com.springboot.bankbackend.service.auth;
 
+import com.nimbusds.oauth2.sdk.Role;
 import com.springboot.bankbackend.bo.CustomUserDetails;
 import com.springboot.bankbackend.entity.UserEntity;
 import com.springboot.bankbackend.exception.UserNotFoundException;
@@ -31,12 +32,9 @@ public class CustomUserDetailsService implements UserDetailsService {
     userDetails.setId(user.getId());
     userDetails.setUserName(user.getUsername());
     userDetails.setPassword(user.getPassword());
+    userDetails.setBankAccounts(user.getBankAccounts());
     userDetails.setRole(user.getRole().toString());
-    userDetails.setPhone(user.getPhoneNumber());
     userDetails.setEmail(user.getEmail());
-    userDetails.setAddress(user.getAddress());
-    userDetails.setTransactions(user.getTransactions());
-    userDetails.setBankAccount(user.getBankAccount());
 
     return userDetails;
   }

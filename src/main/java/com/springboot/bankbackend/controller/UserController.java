@@ -49,7 +49,7 @@ public class UserController {
   ResponseEntity<UserResponse> getProfile(
       @RequestParam(required = false) String filterBefore,
       @RequestParam(required = false) String filterAfter) {
-    UserResponse response = userService.getProfile(filterBefore, filterAfter);
+    UserResponse response = userService.getProfile();
 
     // Check if the response is not null (indicating a successful get)
     if (response != null) {

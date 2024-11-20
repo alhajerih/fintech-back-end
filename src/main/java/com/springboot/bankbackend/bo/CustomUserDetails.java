@@ -1,7 +1,6 @@
 package com.springboot.bankbackend.bo;
 
 import com.springboot.bankbackend.entity.BankAccountEntity;
-import com.springboot.bankbackend.entity.TransactionEntity;
 import java.util.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -13,34 +12,18 @@ public class CustomUserDetails implements UserDetails {
   private String userName;
   private String password;
   private String email;
-  private String address;
-  private String phone;
   private String role;
-  private List<TransactionEntity> transactions;
-  private BankAccountEntity bankAccount;
+  private List<BankAccountEntity> bankAccounts;
 
-  public BankAccountEntity getBankAccount() {
-    return bankAccount;
+  public List<BankAccountEntity> getBankAccounts() {
+    return bankAccounts;
   }
 
-  public void setBankAccount(BankAccountEntity bankAccount) {
-    this.bankAccount = bankAccount;
-  }
-
-  public String getPhone() {
-    return phone;
-  }
-
-  public void setPhone(String phone) {
-    this.phone = phone;
-  }
-
-  public List<TransactionEntity> getTransactions() {
-    return transactions;
-  }
-
-  public void setTransactions(List<TransactionEntity> transactions) {
-    this.transactions = transactions;
+  public void setBankAccounts(List<BankAccountEntity> bankAccount) {
+    if (this.bankAccounts == null) {
+      this.bankAccounts = new ArrayList<>();
+    }
+    this.bankAccounts = bankAccount;
   }
 
   public String getEmail() {
@@ -49,18 +32,6 @@ public class CustomUserDetails implements UserDetails {
 
   public void setEmail(String email) {
     this.email = email;
-  }
-
-  public String getAddress() {
-    return address;
-  }
-
-  public void setAddress(String address) {
-    this.address = address;
-  }
-
-  public String getPhoneNumber() {
-    return phone;
   }
 
   public Long getId() {

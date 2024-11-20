@@ -1,13 +1,12 @@
 package com.springboot.bankbackend.service;
 
 import com.springboot.bankbackend.bo.UserResponse;
-import com.springboot.bankbackend.entity.TransactionEntity;
+import com.springboot.bankbackend.entity.TransactionsEntity;
 import com.springboot.bankbackend.entity.UserEntity;
 import com.springboot.bankbackend.repository.BankRepository;
 import com.springboot.bankbackend.repository.UserRepository;
 import com.springboot.bankbackend.service.auth.CustomUserDetailsService;
-import com.springboot.bankbackend.utils.TransactionType;
-import java.util.ArrayList;
+
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -36,33 +35,13 @@ public class AdminServiceImpl implements AdminService {
 
     // Map each UserEntity to UserProfileResponse and return as a list
     return users.stream()
-        .map(
-            user ->
-                new UserResponse(
-                    user.getId(),
-                    user.getUsername(),
-                    user.getRole().toString(),
-                    user.getEmail(),
-                    user.getPhoneNumber(),
-                    user.getAddress(),
-                    user.getBankAccount().getBalance(),
-                    user.getBankAccount().getId(),
-                    user.getTransactions()))
+        .map(user -> new UserResponse(user.getId(), user.getUsername(), user.getEmail()))
         .collect(Collectors.toList());
   }
 
   public UserResponse getUserById(Long id) {
     UserEntity user = userRepository.getById(id);
-    return new UserResponse(
-        user.getId(),
-        user.getUsername(),
-        user.getRole().toString(),
-        user.getEmail(),
-        user.getPhoneNumber(),
-        user.getAddress(),
-        user.getBankAccount().getBalance(),
-        user.getBankAccount().getId(),
-            user.getTransactions());
+    return new UserResponse(user.getId(), user.getUsername(), user.getEmail());
   }
 
   @Override
@@ -74,19 +53,8 @@ public class AdminServiceImpl implements AdminService {
   }
 
   @Override
-  public List<TransactionEntity> getAllDeposits() {
-    List<UserEntity> users = userRepository.findAll();
-    List<TransactionEntity> depositTransactions = new ArrayList<>();
-
-    for (UserEntity user : users) {
-      for (TransactionEntity transaction : user.getTransactions()) {
-        if (transaction.getTransactionType().equals(TransactionType.DEPOSIT)) {
-          depositTransactions.add(transaction);
-        }
-      }
-    }
-
-    return depositTransactions;
+  public List<TransactionsEntity> getAllDeposits() {
+    // todo implement get all deposits
+    return null;
   }
-
 }

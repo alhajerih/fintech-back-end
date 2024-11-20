@@ -1,21 +1,29 @@
 package com.springboot.bankbackend.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
 public class TransactionsEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
     private Long Id;
     private Double amount;
     private String message;
     private LocalDateTime dateTime;
     private String toId;
+
+    @ManyToOne
+    @JoinColumn(name = "bank_account_id")
+    private BankAccountEntity bankAccount;
+
+    public BankAccountEntity getBankAccount() {
+        return bankAccount;
+    }
+
+    public void setBankAccount(BankAccountEntity bankAccount) {
+        this.bankAccount = bankAccount;
+    }
 
     public TransactionsEntity() {
     }

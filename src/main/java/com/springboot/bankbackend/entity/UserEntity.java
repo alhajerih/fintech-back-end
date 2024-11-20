@@ -1,10 +1,9 @@
 package com.springboot.bankbackend.entity;
 
-import javax.persistence.*;
-import com.springboot.bankbackend.utils.Roles;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-
+import com.springboot.bankbackend.utils.Roles;
 import java.util.List;
+import javax.persistence.*;
 
 @Entity
 public class UserEntity {
@@ -13,16 +12,46 @@ public class UserEntity {
     private Long Id;
     private String  email;
     private String  profilePicture;
+
+    @Enumerated(EnumType.STRING)
+    private Roles role;
+
+    @ElementCollection
     private List<String> beneficiaryAccountNumbers;
 
-//    @Enumerated(EnumType.STRING)
-//    private Status status;
-
-    @Column(name = "user_name", nullable = false)
+    @Column(name = "username", nullable = false)
     private String username;
 
     @Column(name = "password", nullable = false)
     private String  password;
+
+    // Bank accounts
+    @JsonManagedReference
+    @OneToMany(mappedBy = "user")
+    private List<BankAccountEntity> bankAccounts;
+
+    public void setRole(Roles role) {
+        this.role = role;
+    }
+
+    public Roles getRole() {
+        return role;
+    }
+
+    public List<BankAccountEntity> getBankAccounts() {
+        return bankAccounts;
+    }
+
+    public void setBankAccounts(List<BankAccountEntity> bankAccounts) {
+        this.bankAccounts = bankAccounts;
+    }
+
+    public void addBankAccount(BankAccountEntity bankAccount) {
+        if(this.bankAccounts == null) {
+            this.bankAccounts = new java.util.ArrayList<>();
+        }
+        this.bankAccounts.add(bankAccount);
+    }
 
     public Long getId() {
         return Id;
