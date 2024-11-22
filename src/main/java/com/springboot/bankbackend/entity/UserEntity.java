@@ -2,6 +2,8 @@ package com.springboot.bankbackend.entity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.springboot.bankbackend.utils.Roles;
+
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
 
@@ -25,10 +27,21 @@ public class UserEntity {
     @Column(name = "password", nullable = false)
     private String  password;
 
-    // Bank accounts
-    @JsonManagedReference
     @OneToMany(mappedBy = "user")
-    private List<BankAccountEntity> bankAccounts;
+    @JsonManagedReference
+    private List<TransactionEntity> transactions = new ArrayList<>();
+
+    public List<TransactionEntity> getTransactions() {
+        return transactions;
+    }
+
+    public void setTransactions(List<TransactionEntity> transactions) {
+        this.transactions = transactions;
+    }
+
+    public void addTransaction(TransactionEntity transaction) {
+        this.transactions.add(transaction);
+    }
 
     public void setRole(Roles role) {
         this.role = role;
@@ -36,21 +49,6 @@ public class UserEntity {
 
     public Roles getRole() {
         return role;
-    }
-
-    public List<BankAccountEntity> getBankAccounts() {
-        return bankAccounts;
-    }
-
-    public void setBankAccounts(List<BankAccountEntity> bankAccounts) {
-        this.bankAccounts = bankAccounts;
-    }
-
-    public void addBankAccount(BankAccountEntity bankAccount) {
-        if(this.bankAccounts == null) {
-            this.bankAccounts = new java.util.ArrayList<>();
-        }
-        this.bankAccounts.add(bankAccount);
     }
 
     public Long getId() {

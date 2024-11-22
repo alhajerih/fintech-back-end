@@ -1,7 +1,5 @@
 package com.springboot.bankbackend.bo;
 
-import com.springboot.bankbackend.entity.TransactionsEntity;
-
 public class UserResponse {
 
   private Long id;

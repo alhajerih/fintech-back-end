@@ -2,16 +2,22 @@ package com.springboot.bankbackend.service;
 
 import com.springboot.bankbackend.bo.*;
 import com.springboot.bankbackend.entity.BankAccountEntity;
-import com.springboot.bankbackend.entity.TransactionsEntity;
+import com.springboot.bankbackend.entity.TransactionEntity;
 import com.springboot.bankbackend.entity.UserEntity;
 import com.springboot.bankbackend.repository.BankRepository;
+import com.springboot.bankbackend.repository.TransactionRepository;
 import com.springboot.bankbackend.repository.UserRepository;
 import com.springboot.bankbackend.service.auth.CustomUserDetailsService;
 import com.springboot.bankbackend.utils.Roles;
+import org.apache.catalina.User;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -19,16 +25,59 @@ public class UserServiceImpl implements UserService {
   private final BCryptPasswordEncoder bCryptPasswordEncoder;
   private final CustomUserDetailsService userDetailsService;
   private final BankRepository bankRepository;
+  private final TransactionRepository transactionRepository;
 
   public UserServiceImpl(
       UserRepository userRepository,
       BCryptPasswordEncoder bCryptPasswordEncoder,
       CustomUserDetailsService userDetailsService,
-      BankRepository bankRepository) {
+      BankRepository bankRepository,
+      TransactionRepository transactionRepository) {
     this.userRepository = userRepository;
     this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     this.userDetailsService = userDetailsService;
     this.bankRepository = bankRepository;
+    this.transactionRepository = transactionRepository;
+  }
+
+  // todo remove later, for testing
+  // Add transaction
+  @Override
+  public TransactionEntity addTransaction(TransactionRequest request) {
+    // Create a new TransactionEntity and populate its fields
+    TransactionEntity transaction = new TransactionEntity();
+    transaction.setAmount(request.getAmount());
+    transaction.setMessage(request.getMessage());
+    transaction.setDateTime(LocalDateTime.now());
+    transaction.setTransactionCategory(request.getTransactionCategory());
+    transaction.setTransactionType(request.getTransactionType());
+
+    // Get the currently authenticated user
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    String username = authentication.getName();
+
+    // Fetch the UserEntity from the database
+    UserEntity userEntity = userRepository.findByUsername(username)
+            .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+    // Establish the relationship and save the transaction
+    transaction.setUser(userEntity); // Set the user in the transaction
+    transactionRepository.save(transaction);
+
+    // Update the user's transaction list
+    userEntity.getTransactions().add(transaction);
+    userRepository.save(userEntity);
+
+    return transaction;
+  }
+
+
+  @Override
+  public List<TransactionEntity> getTransactions() {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    String username = authentication.getName();
+    CustomUserDetails user = userDetailsService.loadUserByUsername(username);
+    return user.getTransactions();
   }
 
   @Override
@@ -57,11 +106,6 @@ public class UserServiceImpl implements UserService {
     bankAccount.setUser(userEntity); // Set the user reference in BankAccountEntity
     bankAccount.setBalance(0.0);
 
-    // Save the BankAccountEntity
-    bankAccount = bankRepository.save(bankAccount);
-
-    // Update the userEntity with the bank account association and save it again
-    userEntity.addBankAccount(bankAccount);
     userEntity = userRepository.save(userEntity);
 
     UserResponse response =

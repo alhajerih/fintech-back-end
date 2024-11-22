@@ -1,7 +1,7 @@
 package com.springboot.bankbackend.controller;
 
 import com.springboot.bankbackend.bo.UserResponse;
-import com.springboot.bankbackend.entity.TransactionsEntity;
+import com.springboot.bankbackend.entity.TransactionEntity;
 import com.springboot.bankbackend.service.AdminService;
 import java.util.List;
 import org.springframework.http.HttpStatus;
@@ -54,7 +54,7 @@ public class AdminController {
 
   // Admin gets all deposit transactions
   @GetMapping("/transaction/status")
-  public List<TransactionsEntity> getAllDeposits() {
+  public List<TransactionEntity> getAllDeposits() {
     return adminService.getAllDeposits();
   }
 }

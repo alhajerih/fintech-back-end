@@ -24,19 +24,6 @@ public class BankAccountEntity {
     @JsonBackReference
     private UserEntity user;
 
-    // Transactions
-    @OneToMany(mappedBy = "bankAccount")
-    private List<TransactionsEntity> transactions;
-
-
-    public List<TransactionsEntity> getTransactions() {
-        return transactions;
-    }
-
-    public void setTransactions(List<TransactionsEntity> transactions) {
-        this.transactions = transactions;
-    }
-
     public String getCardNumber() {
         return cardNumber;
     }

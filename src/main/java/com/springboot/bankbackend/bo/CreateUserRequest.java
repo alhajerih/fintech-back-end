@@ -7,10 +7,19 @@ public class CreateUserRequest {
     private String username;
     private String email;
     private String password;
+    private String profilePicture;
     private String role;
 
     public CreateUserRequest () {
         // Default constructor
+    }
+
+    public String getProfilePicture() {
+        return profilePicture;
+    }
+
+    public void setProfilePicture(String profilePicture) {
+        this.profilePicture = profilePicture;
     }
 
     public String getUsername() {

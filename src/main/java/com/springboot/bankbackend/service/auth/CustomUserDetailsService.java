@@ -32,9 +32,10 @@ public class CustomUserDetailsService implements UserDetailsService {
     userDetails.setId(user.getId());
     userDetails.setUserName(user.getUsername());
     userDetails.setPassword(user.getPassword());
-    userDetails.setBankAccounts(user.getBankAccounts());
+    userDetails.setTransactions(user.getTransactions());
     userDetails.setRole(user.getRole().toString());
     userDetails.setEmail(user.getEmail());
+    userDetails.setProfilePicture(user.getProfilePicture());
 
     return userDetails;
   }

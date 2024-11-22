@@ -1,7 +1,7 @@
 package com.springboot.bankbackend.service;
 
 import com.springboot.bankbackend.bo.UserResponse;
-import com.springboot.bankbackend.entity.TransactionsEntity;
+import com.springboot.bankbackend.entity.TransactionEntity;
 import com.springboot.bankbackend.entity.UserEntity;
 import com.springboot.bankbackend.repository.BankRepository;
 import com.springboot.bankbackend.repository.UserRepository;
@@ -53,7 +53,7 @@ public class AdminServiceImpl implements AdminService {
   }
 
   @Override
-  public List<TransactionsEntity> getAllDeposits() {
+  public List<TransactionEntity> getAllDeposits() {
     // todo implement get all deposits
     return null;
   }
