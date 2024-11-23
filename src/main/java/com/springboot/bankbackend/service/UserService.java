@@ -11,6 +11,4 @@ public interface UserService {
     UserResponse getProfile();
     TransactionEntity addTransaction(TransactionRequest request);
     List<TransactionEntity> getTransactions();
-    public UpdateBalanceResponse updateBalance(UpdateBalanceRequest request);
-    //    UserBalanceResponse withdraw(UserTransactionRequest request);
 }

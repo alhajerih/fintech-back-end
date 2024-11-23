@@ -1,10 +1,8 @@
 package com.springboot.bankbackend.service;
 
 import com.springboot.bankbackend.bo.*;
-import com.springboot.bankbackend.entity.BankAccountEntity;
 import com.springboot.bankbackend.entity.TransactionEntity;
 import com.springboot.bankbackend.entity.UserEntity;
-import com.springboot.bankbackend.repository.BankRepository;
 import com.springboot.bankbackend.repository.TransactionRepository;
 import com.springboot.bankbackend.repository.UserRepository;
 import com.springboot.bankbackend.service.auth.CustomUserDetailsService;
@@ -24,23 +22,19 @@ public class UserServiceImpl implements UserService {
   private final UserRepository userRepository;
   private final BCryptPasswordEncoder bCryptPasswordEncoder;
   private final CustomUserDetailsService userDetailsService;
-  private final BankRepository bankRepository;
   private final TransactionRepository transactionRepository;
 
   public UserServiceImpl(
       UserRepository userRepository,
       BCryptPasswordEncoder bCryptPasswordEncoder,
       CustomUserDetailsService userDetailsService,
-      BankRepository bankRepository,
       TransactionRepository transactionRepository) {
     this.userRepository = userRepository;
     this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     this.userDetailsService = userDetailsService;
-    this.bankRepository = bankRepository;
     this.transactionRepository = transactionRepository;
   }
 
-  // todo remove later, for testing
   // Add transaction
   @Override
   public TransactionEntity addTransaction(TransactionRequest request) {
@@ -71,7 +65,6 @@ public class UserServiceImpl implements UserService {
     return transaction;
   }
 
-
   @Override
   public List<TransactionEntity> getTransactions() {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -98,14 +91,6 @@ public class UserServiceImpl implements UserService {
     //todo put a real profile picture
     userEntity.setProfilePicture("https://example.com/profile-picture.jpg");
 
-    // Save UserEntity first to make it persistent
-    userEntity = userRepository.save(userEntity);
-
-    // Create and associate the BankAccountEntity
-    BankAccountEntity bankAccount = new BankAccountEntity();
-    bankAccount.setUser(userEntity); // Set the user reference in BankAccountEntity
-    bankAccount.setBalance(0.0);
-
     userEntity = userRepository.save(userEntity);
 
     UserResponse response =
@@ -113,6 +98,7 @@ public class UserServiceImpl implements UserService {
     return response;
   }
 
+  @Override
   public UserResponse updateProfile(UpdateProfileRequest request) {
     CustomUserDetails user = userDetailsService.loadUserByUsername(request.getUsername());
 
@@ -129,6 +115,7 @@ public class UserServiceImpl implements UserService {
     return response;
   }
 
+  @Override
   public UserResponse getProfile() {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     String username = authentication.getName();
@@ -140,18 +127,5 @@ public class UserServiceImpl implements UserService {
             new UserResponse(userDetails.getId(), userDetails.getUsername(), userDetails.getEmail());
 
     return response;
-  }
-
-  public UpdateBalanceResponse updateBalance(UpdateBalanceRequest request) {
-    // Get the username of the currently logged-in user from the security context
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    String username = authentication.getName();
-
-    // Load user details using CustomUserDetailsService
-    CustomUserDetails loggedInUserDetails = userDetailsService.loadUserByUsername(username);
-    Long loggedInUserId = loggedInUserDetails.getId();
-
-    // todo inplement update balance
-    return null;
   }
 }

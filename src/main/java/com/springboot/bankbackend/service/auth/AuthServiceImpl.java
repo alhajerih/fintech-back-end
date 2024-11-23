@@ -58,9 +58,6 @@ public class AuthServiceImpl implements AuthService{
         return response;
     }
 
-
-
-
     @Override
     public void logout(LogoutResponse logoutResponse) {
         requiredNonNull(logoutResponse.getToken(),"token");

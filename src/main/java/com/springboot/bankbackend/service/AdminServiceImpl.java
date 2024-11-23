@@ -3,7 +3,6 @@ package com.springboot.bankbackend.service;
 import com.springboot.bankbackend.bo.UserResponse;
 import com.springboot.bankbackend.entity.TransactionEntity;
 import com.springboot.bankbackend.entity.UserEntity;
-import com.springboot.bankbackend.repository.BankRepository;
 import com.springboot.bankbackend.repository.UserRepository;
 import com.springboot.bankbackend.service.auth.CustomUserDetailsService;
 
@@ -17,19 +16,17 @@ public class AdminServiceImpl implements AdminService {
   private final UserRepository userRepository;
   private final BCryptPasswordEncoder bCryptPasswordEncoder;
   private final CustomUserDetailsService userDetailsService;
-  private final BankRepository bankRepository;
 
   public AdminServiceImpl(
       UserRepository userRepository,
       BCryptPasswordEncoder bCryptPasswordEncoder,
-      CustomUserDetailsService userDetailsService,
-      BankRepository bankRepository) {
+      CustomUserDetailsService userDetailsService) {
     this.userRepository = userRepository;
     this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     this.userDetailsService = userDetailsService;
-    this.bankRepository = bankRepository;
   }
 
+  @Override
   public List<UserResponse> getAllUsers() {
     List<UserEntity> users = userRepository.findAll();
 
@@ -39,6 +36,7 @@ public class AdminServiceImpl implements AdminService {
         .collect(Collectors.toList());
   }
 
+  @Override
   public UserResponse getUserById(Long id) {
     UserEntity user = userRepository.getById(id);
     return new UserResponse(user.getId(), user.getUsername(), user.getEmail());
