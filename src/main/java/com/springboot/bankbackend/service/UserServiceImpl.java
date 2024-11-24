@@ -1,8 +1,13 @@
 package com.springboot.bankbackend.service;
 
 import com.springboot.bankbackend.bo.*;
+import com.springboot.bankbackend.bo.auth.AuthenticationResponse;
+import com.springboot.bankbackend.entity.BeneficiaryEntity;
+import com.springboot.bankbackend.entity.SavingsEntity;
 import com.springboot.bankbackend.entity.TransactionEntity;
 import com.springboot.bankbackend.entity.UserEntity;
+import com.springboot.bankbackend.repository.BeneficiaryRepository;
+import com.springboot.bankbackend.repository.SavingsRepository;
 import com.springboot.bankbackend.repository.TransactionRepository;
 import com.springboot.bankbackend.repository.UserRepository;
 import com.springboot.bankbackend.service.auth.CustomUserDetailsService;
@@ -13,8 +18,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.yaml.snakeyaml.events.Event;
 
+import javax.persistence.Id;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -23,16 +31,21 @@ public class UserServiceImpl implements UserService {
   private final BCryptPasswordEncoder bCryptPasswordEncoder;
   private final CustomUserDetailsService userDetailsService;
   private final TransactionRepository transactionRepository;
-
+  private final BeneficiaryRepository beneficiaryRepository;
+  private final SavingsRepository savingsRepository;
   public UserServiceImpl(
       UserRepository userRepository,
       BCryptPasswordEncoder bCryptPasswordEncoder,
       CustomUserDetailsService userDetailsService,
-      TransactionRepository transactionRepository) {
+      TransactionRepository transactionRepository,
+      BeneficiaryRepository beneficiaryRepository,
+      SavingsRepository savingsRepository) {
     this.userRepository = userRepository;
     this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     this.userDetailsService = userDetailsService;
     this.transactionRepository = transactionRepository;
+    this.beneficiaryRepository = beneficiaryRepository;
+    this.savingsRepository = savingsRepository;
   }
 
   // Add transaction
@@ -128,4 +141,36 @@ public class UserServiceImpl implements UserService {
 
     return response;
   }
+
+  @Override
+  public UserEntity getUserProfileByUsername(String username){
+
+    UserEntity user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User Not Found"));
+
+    return user;
+  }
+
+  @Override
+  public List<BeneficiaryEntity> getBeneficiariesByUsername(String username) {
+    UserEntity user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("beneficiary Not Found"));
+
+    List<BeneficiaryEntity> beneficiaryEntities = user.getBeneficiaries();
+
+    return beneficiaryEntities;
+  }
+
+@Override
+  public BeneficiaryEntity addBeneficiary(String username, BeneficiaryRequest request){
+  UserEntity user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User Not Found"));
+  BeneficiaryEntity beneficary = new BeneficiaryEntity();
+  beneficary.setDoesNeedGroceries(request.getDoesNeedGroceries());
+  beneficary.setGroceriesMultiplier(request.getGroceriesMultiplier());
+  beneficary.setUser(user);
+  BeneficiaryEntity userBeneficiary = beneficiaryRepository.save(beneficary);
+  user.addBeneficiary(userBeneficiary);
+  userRepository.save(user);
+
+  return userBeneficiary;
+}
+
 }
