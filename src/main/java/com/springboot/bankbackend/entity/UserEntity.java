@@ -1,5 +1,6 @@
 package com.springboot.bankbackend.entity;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.springboot.bankbackend.utils.Roles;
 
@@ -30,6 +31,14 @@ public class UserEntity {
     @OneToMany(mappedBy = "user")
     @JsonManagedReference
     private List<TransactionEntity> transactions = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    @JsonManagedReference
+    private List<BeneficiaryEntity> beneficiaries = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    @JsonManagedReference
+    private List<SavingsEntity> savings = new ArrayList<>();
 
     public List<TransactionEntity> getTransactions() {
         return transactions;
@@ -97,5 +106,25 @@ public class UserEntity {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public List<BeneficiaryEntity> getBeneficiaries() {
+        return beneficiaries;
+    }
+
+    public void setBeneficiaries(List<BeneficiaryEntity> beneficiaries) {
+        this.beneficiaries = beneficiaries;
+    }
+
+    public List<SavingsEntity> getSavings() {
+        return savings;
+    }
+
+    public void setSavings(List<SavingsEntity> savings) {
+        this.savings = savings;
+    }
+
+    public void addBeneficiary(BeneficiaryEntity beneficiary) {
+        beneficiaries.add(beneficiary);
     }
 }
