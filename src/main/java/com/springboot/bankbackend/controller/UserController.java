@@ -42,7 +42,6 @@ public class UserController {
     }
   }
 
-  // todo remove later since this is only for testing
   // Add defined transaction to user
   @PostMapping("/transactions")
   ResponseEntity<TransactionEntity> addTransaction(@RequestBody TransactionRequest request) {
@@ -73,23 +72,4 @@ public class UserController {
     }
   }
 
-//
-//  // Get profile for logged in user, optionally filter by date
-//  // The filterBefore and filterAfter parameters are optional
-//  // and must be in format of yyyy-MM-dd
-//  @GetMapping("/profile")
-//  ResponseEntity<UserResponse> getProfile(
-//      @RequestParam(required = false) String filterBefore,
-//      @RequestParam(required = false) String filterAfter) {
-//    UserResponse response = userService.getProfile();
-//
-//    // Check if the response is not null (indicating a successful get)
-//    if (response != null) {
-//      // Return a 200 OK status code along with some of the user data
-//      return ResponseEntity.status(HttpStatus.OK).body(response);
-//    } else {
-//      // Handle the case where the get was not successful (e.g., validation failed)
-//      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
-//    }
-//  }
 }
