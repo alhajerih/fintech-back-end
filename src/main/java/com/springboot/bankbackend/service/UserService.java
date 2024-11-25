@@ -2,6 +2,7 @@ package com.springboot.bankbackend.service;
 
 import com.springboot.bankbackend.bo.*;
 import com.springboot.bankbackend.entity.BeneficiaryEntity;
+import com.springboot.bankbackend.entity.SavingsEntity;
 import com.springboot.bankbackend.entity.TransactionEntity;
 import com.springboot.bankbackend.entity.UserEntity;
 
@@ -16,4 +17,8 @@ public interface UserService {
     UserEntity getUserProfileByUsername(String username);
     List<BeneficiaryEntity> getBeneficiariesByUsername(String username);
     BeneficiaryEntity addBeneficiary(String username, BeneficiaryRequest request);
+    List<BeneficiaryEntity> getBeneficiary();
+    SavingsEntity addSaving(String username, SavingRequest request);
+    List<SavingsEntity> getSaving();
+    SavingsEntity deleteSaving( Long id);
 }

@@ -41,8 +41,15 @@ public class FixedPaymentEntity {
         this.amount = amount;
     }
 
-    @OneToMany
+    @ManyToOne
     @JoinColumn(name = "fixed_payment_id")
-    private List<TransactionEntity> transactions;
+    private BeneficiaryEntity beneficiary;
 
+    public BeneficiaryEntity getBeneficiary() {
+        return beneficiary;
+    }
+
+    public void setBeneficiary(BeneficiaryEntity beneficiary) {
+        this.beneficiary = beneficiary;
+    }
 }

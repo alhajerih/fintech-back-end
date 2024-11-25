@@ -127,4 +127,8 @@ public class UserEntity {
     public void addBeneficiary(BeneficiaryEntity beneficiary) {
         beneficiaries.add(beneficiary);
     }
+    public void addSaving(SavingsEntity saving){
+        savings.add(saving);
+
+    }
 }
