@@ -1,8 +1,10 @@
 package com.springboot.bankbackend.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -19,12 +21,16 @@ public class BeneficiaryEntity {
 
     private Double groceriesMultiplier;
 
-    private List<FixedPaymentEntity> fixedPayment;
+    //private List<FixedPaymentEntity> fixedPayment;
 
     @ManyToOne
     @JsonBackReference
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     private UserEntity user;
+
+    @OneToMany(mappedBy = "beneficiary")
+    @JsonManagedReference
+    private List<FixedPaymentEntity> fixedPaymentlist = new ArrayList<>();
 
     public BeneficiaryEntity() {
     }
@@ -61,13 +67,13 @@ public class BeneficiaryEntity {
         this.groceriesMultiplier = groceriesMultiplier;
     }
 
-    public List<FixedPaymentEntity> getFixedPayment() {
-        return fixedPayment;
-    }
-
-    public void setFixedPayment(List<FixedPaymentEntity> fixedPayment) {
-        this.fixedPayment = fixedPayment;
-    }
+//    public List<FixedPaymentEntity> getFixedPayment() {
+//        return fixedPayment;
+//    }
+//
+//    public void setFixedPayment(List<FixedPaymentEntity> fixedPayment) {
+//        this.fixedPayment = fixedPayment;
+//    }
 
     public UserEntity getUser() {
         return user;
@@ -75,5 +81,13 @@ public class BeneficiaryEntity {
 
     public void setUser(UserEntity user) {
         this.user = user;
+    }
+
+    public List<FixedPaymentEntity> getFixedPaymentlist() {
+        return fixedPaymentlist;
+    }
+
+    public void setFixedPaymentlist(List<FixedPaymentEntity> fixedPaymentlist) {
+        this.fixedPaymentlist = fixedPaymentlist;
     }
 }

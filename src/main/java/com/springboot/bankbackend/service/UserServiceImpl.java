@@ -83,6 +83,7 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public UserResponse createUser(CreateUserRequest request) {
+
     UserEntity userEntity = new UserEntity();
 
     // Check if there is already a user with the same username
@@ -93,7 +94,6 @@ public class UserServiceImpl implements UserService {
     userEntity.setUsername(request.getUsername());
     userEntity.setPassword(bCryptPasswordEncoder.encode(request.getPassword()));
     userEntity.setEmail(request.getEmail());
-
     userEntity.setRole(Roles.user);
 
     //todo put a real profile picture
@@ -109,13 +109,11 @@ public class UserServiceImpl implements UserService {
   @Override
   public UserResponse updateProfile(UpdateProfileRequest request) {
     CustomUserDetails user = userDetailsService.loadUserByUsername(request.getUsername());
-
     UserEntity userEntity = new UserEntity();
     userEntity.setUsername(request.getUsername());
     userEntity.setEmail(request.getEmail());
     userEntity.setId(user.getId());
     userEntity.setPassword(bCryptPasswordEncoder.encode(request.getPassword()));
-
     userEntity = userRepository.save(userEntity);
     UserResponse response =
             new UserResponse(userEntity.getId(), userEntity.getUsername(), userEntity.getEmail());
@@ -127,7 +125,6 @@ public class UserServiceImpl implements UserService {
   public UserResponse getProfile() {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     String username = authentication.getName();
-
     CustomUserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
     // Build the UserResponse with filtered transactions
@@ -139,8 +136,7 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public UserEntity getUserProfileByUsername(String username){
-
-    UserEntity user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User Not Found"));
+    UserEntity user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException(" Profile Not Found "));
 
     return user;
   }
@@ -148,7 +144,6 @@ public class UserServiceImpl implements UserService {
   @Override
   public List<BeneficiaryEntity> getBeneficiariesByUsername(String username) {
     UserEntity user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("beneficiary Not Found"));
-
     List<BeneficiaryEntity> beneficiaryEntities = user.getBeneficiaries();
 
     return beneficiaryEntities;
