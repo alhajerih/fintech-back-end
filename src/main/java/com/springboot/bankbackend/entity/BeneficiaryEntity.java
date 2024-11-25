@@ -1,14 +1,93 @@
 package com.springboot.bankbackend.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class BeneficiaryEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     private Long id;
+
+    private String name;
+
+    private Boolean doesNeedGroceries;
+
+    private Double groceriesMultiplier;
+
+    //private List<FixedPaymentEntity> fixedPayment;
+
+    @ManyToOne
+    @JsonBackReference
+    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
+    private UserEntity user;
+
+    @OneToMany(mappedBy = "beneficiary")
+    @JsonManagedReference
+    private List<FixedPaymentEntity> fixedPaymentlist = new ArrayList<>();
+
+    public BeneficiaryEntity() {
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Boolean getDoesNeedGroceries() {
+        return doesNeedGroceries;
+    }
+
+    public void setDoesNeedGroceries(Boolean doesNeedGroceries) {
+        this.doesNeedGroceries = doesNeedGroceries;
+    }
+
+    public Double getGroceriesMultiplier() {
+        return groceriesMultiplier;
+    }
+
+    public void setGroceriesMultiplier(Double groceriesMultiplier) {
+        this.groceriesMultiplier = groceriesMultiplier;
+    }
+
+//    public List<FixedPaymentEntity> getFixedPayment() {
+//        return fixedPayment;
+//    }
+//
+//    public void setFixedPayment(List<FixedPaymentEntity> fixedPayment) {
+//        this.fixedPayment = fixedPayment;
+//    }
+
+    public UserEntity getUser() {
+        return user;
+    }
+
+    public void setUser(UserEntity user) {
+        this.user = user;
+    }
+
+    public List<FixedPaymentEntity> getFixedPaymentlist() {
+        return fixedPaymentlist;
+    }
+
+    public void setFixedPaymentlist(List<FixedPaymentEntity> fixedPaymentlist) {
+        this.fixedPaymentlist = fixedPaymentlist;
+    }
 }

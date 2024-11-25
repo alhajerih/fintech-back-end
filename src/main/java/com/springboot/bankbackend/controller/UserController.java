@@ -1,6 +1,8 @@
 package com.springboot.bankbackend.controller;
 
 import com.springboot.bankbackend.bo.*;
+import com.springboot.bankbackend.entity.BeneficiaryEntity;
+import com.springboot.bankbackend.entity.SavingsEntity;
 import com.springboot.bankbackend.entity.TransactionEntity;
 import com.springboot.bankbackend.service.UserService;
 import com.springboot.bankbackend.service.auth.CustomUserDetailsService;
@@ -42,6 +44,7 @@ public class UserController {
     }
   }
 
+  // todo remove later since this is only for testing
   // Add defined transaction to user
   @PostMapping("/transactions")
   ResponseEntity<TransactionEntity> addTransaction(@RequestBody TransactionRequest request) {
@@ -70,6 +73,57 @@ public class UserController {
       // Handle the case where the get was not successful (e.g., validation failed)
       return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
     }
+  }
+
+//
+//  // Get profile for logged in user, optionally filter by date
+//  // The filterBefore and filterAfter parameters are optional
+//  // and must be in format of yyyy-MM-dd
+//  @GetMapping("/profile")
+//  ResponseEntity<UserResponse> getProfile(
+//      @RequestParam(required = false) String filterBefore,
+//      @RequestParam(required = false) String filterAfter) {
+//    UserResponse response = userService.getProfile();
+//
+//    // Check if the response is not null (indicating a successful get)
+//    if (response != null) {
+//      // Return a 200 OK status code along with some of the user data
+//      return ResponseEntity.status(HttpStatus.OK).body(response);
+//    } else {
+//      // Handle the case where the get was not successful (e.g., validation failed)
+//      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+//    }
+//  }
+
+  @PostMapping("/beneficiaries")
+  public ResponseEntity<BeneficiaryEntity> addBeneficiary(@RequestBody BeneficiaryRequest request){
+    BeneficiaryEntity beneficiary = userService.addBeneficiary(request.getName(), request);
+
+    return ResponseEntity.status(HttpStatus.CREATED).body(beneficiary);
+  }
+
+  @GetMapping("/beneficiaries")
+  public ResponseEntity<List<BeneficiaryEntity>> getBeneficiaries(){
+    List<BeneficiaryEntity> beneficiaries = userService.getBeneficiary();
+    return ResponseEntity.ok(beneficiaries);
+  }
+
+  @PostMapping("/savings")
+  public ResponseEntity<SavingsEntity> addSaving(@RequestBody SavingRequest request){
+    SavingsEntity savings = userService.addSaving(request.getName(), request);
+    return ResponseEntity.status(HttpStatus.CREATED).body(savings);
+  }
+
+  @GetMapping("/savings")
+  public ResponseEntity<List<SavingsEntity>> getSavings(){
+    List<SavingsEntity> savings = userService.getSaving();
+    return ResponseEntity.ok(savings);
+  }
+
+  @DeleteMapping("/savings/{id}")
+  public ResponseEntity<SavingsEntity> deleteSaving(@RequestBody SavingRequest request){
+    SavingsEntity deleteSaving = userService.deleteSaving( request.getId() );
+    return ResponseEntity.ok(deleteSaving);
   }
 
 }
