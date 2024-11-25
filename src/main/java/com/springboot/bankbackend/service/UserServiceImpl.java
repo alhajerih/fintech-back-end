@@ -1,7 +1,6 @@
 package com.springboot.bankbackend.service;
 
 import com.springboot.bankbackend.bo.*;
-import com.springboot.bankbackend.bo.auth.AuthenticationResponse;
 import com.springboot.bankbackend.entity.BeneficiaryEntity;
 import com.springboot.bankbackend.entity.SavingsEntity;
 import com.springboot.bankbackend.entity.TransactionEntity;
@@ -12,17 +11,13 @@ import com.springboot.bankbackend.repository.TransactionRepository;
 import com.springboot.bankbackend.repository.UserRepository;
 import com.springboot.bankbackend.service.auth.CustomUserDetailsService;
 import com.springboot.bankbackend.utils.Roles;
-import org.apache.catalina.User;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.yaml.snakeyaml.events.Event;
 
-import javax.persistence.Id;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -161,7 +156,7 @@ public class UserServiceImpl implements UserService {
 
 @Override
   public BeneficiaryEntity addBeneficiary(String username, BeneficiaryRequest request){
-  UserEntity user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User Not Found"));
+  UserEntity user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException(" User Not Found "));
   BeneficiaryEntity beneficary = new BeneficiaryEntity();
   beneficary.setDoesNeedGroceries(request.getDoesNeedGroceries());
   beneficary.setGroceriesMultiplier(request.getGroceriesMultiplier());
@@ -171,6 +166,46 @@ public class UserServiceImpl implements UserService {
   userRepository.save(user);
 
   return userBeneficiary;
+}
+
+
+  @Override
+  public List<BeneficiaryEntity> getBeneficiary(){
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    String username = authentication.getName();
+    UserEntity user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException(" User Not Found "));
+    return user.getBeneficiaries();
+}
+@Override
+public SavingsEntity addSaving(String username, SavingRequest request){
+    UserEntity user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException(" User Not Found"));
+    SavingsEntity newSaving = new SavingsEntity();
+    newSaving.setAmount(request.getAmount());
+    newSaving.setAmountAllocatedPerMonth(request.getAmountAllocatedPerMonth());
+    newSaving.setMonthsUntilDeadline(request.getMonthsUntilDeadline());
+    newSaving.setName(request.getName());
+    newSaving.setId(request.getId());
+    SavingsEntity userSaving = savingsRepository.save(newSaving);
+    user.addSaving(userSaving);
+    userRepository.save(user);
+
+    return userSaving;
+}
+
+@Override
+  public List<SavingsEntity> getSaving(){
+  Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+  String username = authentication.getName();
+  UserEntity user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException(" User Not Found "));
+
+  return user.getSavings();
+}
+
+public SavingsEntity deleteSaving( Long id ){
+  SavingsEntity saving = savingsRepository.getById(id);
+  savingsRepository.deleteById(id);
+
+  return saving;
 }
 
 }

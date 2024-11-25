@@ -1,6 +1,8 @@
 package com.springboot.bankbackend.controller;
 
 import com.springboot.bankbackend.bo.*;
+import com.springboot.bankbackend.entity.BeneficiaryEntity;
+import com.springboot.bankbackend.entity.SavingsEntity;
 import com.springboot.bankbackend.entity.TransactionEntity;
 import com.springboot.bankbackend.service.UserService;
 import com.springboot.bankbackend.service.auth.CustomUserDetailsService;
@@ -92,4 +94,36 @@ public class UserController {
 //      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
 //    }
 //  }
+
+  @PostMapping("/beneficiaries")
+  public ResponseEntity<BeneficiaryEntity> addBeneficiary(@RequestBody BeneficiaryRequest request){
+    BeneficiaryEntity beneficiary = userService.addBeneficiary(request.getName(), request);
+
+    return ResponseEntity.status(HttpStatus.CREATED).body(beneficiary);
+  }
+
+  @GetMapping("/beneficiaries")
+  public ResponseEntity<List<BeneficiaryEntity>> getBeneficiaries(){
+    List<BeneficiaryEntity> beneficiaries = userService.getBeneficiary();
+    return ResponseEntity.ok(beneficiaries);
+  }
+
+  @PostMapping("/savings")
+  public ResponseEntity<SavingsEntity> addSaving(@RequestBody SavingRequest request){
+    SavingsEntity savings = userService.addSaving(request.getName(), request);
+    return ResponseEntity.status(HttpStatus.CREATED).body(savings);
+  }
+
+  @GetMapping("/savings")
+  public ResponseEntity<List<SavingsEntity>> getSavings(){
+    List<SavingsEntity> savings = userService.getSaving();
+    return ResponseEntity.ok(savings);
+  }
+
+  @DeleteMapping("/savings/{id}")
+  public ResponseEntity<SavingsEntity> deleteSaving(@RequestBody SavingRequest request){
+    SavingsEntity deleteSaving = userService.deleteSaving( request.getId() );
+    return ResponseEntity.ok(deleteSaving);
+  }
+
 }
