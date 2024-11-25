@@ -1,5 +1,6 @@
 package com.springboot.bankbackend.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
@@ -20,11 +21,19 @@ public class SavingsEntity {
   private Integer monthsUntilDeadline;
 
   @ManyToOne
-  @JsonManagedReference
+  @JsonBackReference
   @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
   private UserEntity user;
 
   public SavingsEntity() {
+  }
+
+  public UserEntity getUser() {
+    return user;
+  }
+
+  public void setUser(UserEntity user) {
+    this.user = user;
   }
 
   public Long getId() {

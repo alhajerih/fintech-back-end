@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -31,23 +32,22 @@ public class UserController {
 
   // Update profile for logged in user
   @PutMapping("/update-profile")
-  ResponseEntity<UserResponse> updateProfile(@RequestBody UpdateProfileRequest request) {
+  ResponseEntity<UserResponse> updateProfile(@Valid @RequestBody UpdateProfileRequest request) {
     UserResponse response = userService.updateProfile(request);
 
     // Check if the response is not null (indicating a successful update)
     if (response != null) {
       // Return a 201 Created status code along with some of the updated user data
-      return ResponseEntity.status(HttpStatus.CREATED).body(response);
+      return ResponseEntity.status(HttpStatus.OK).body(response);
     } else {
       // Handle the case where the update was not successful (e.g., validation failed)
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
     }
   }
 
-  // todo remove later since this is only for testing
   // Add defined transaction to user
   @PostMapping("/transactions")
-  ResponseEntity<TransactionEntity> addTransaction(@RequestBody TransactionRequest request) {
+  ResponseEntity<TransactionEntity> addTransaction(@Valid @RequestBody TransactionRequest request) {
     TransactionEntity response = userService.addTransaction(request);
 
     // Check if the response is not null (indicating a successful update)
@@ -75,29 +75,9 @@ public class UserController {
     }
   }
 
-//
-//  // Get profile for logged in user, optionally filter by date
-//  // The filterBefore and filterAfter parameters are optional
-//  // and must be in format of yyyy-MM-dd
-//  @GetMapping("/profile")
-//  ResponseEntity<UserResponse> getProfile(
-//      @RequestParam(required = false) String filterBefore,
-//      @RequestParam(required = false) String filterAfter) {
-//    UserResponse response = userService.getProfile();
-//
-//    // Check if the response is not null (indicating a successful get)
-//    if (response != null) {
-//      // Return a 200 OK status code along with some of the user data
-//      return ResponseEntity.status(HttpStatus.OK).body(response);
-//    } else {
-//      // Handle the case where the get was not successful (e.g., validation failed)
-//      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
-//    }
-//  }
-
   @PostMapping("/beneficiaries")
-  public ResponseEntity<BeneficiaryEntity> addBeneficiary(@RequestBody BeneficiaryRequest request){
-    BeneficiaryEntity beneficiary = userService.addBeneficiary(request.getName(), request);
+  public ResponseEntity<BeneficiaryEntity> addBeneficiary(@Valid @RequestBody BeneficiaryRequest request){
+    BeneficiaryEntity beneficiary = userService.addBeneficiary(request);
 
     return ResponseEntity.status(HttpStatus.CREATED).body(beneficiary);
   }
@@ -109,8 +89,8 @@ public class UserController {
   }
 
   @PostMapping("/savings")
-  public ResponseEntity<SavingsEntity> addSaving(@RequestBody SavingRequest request){
-    SavingsEntity savings = userService.addSaving(request.getName(), request);
+  public ResponseEntity<SavingsEntity> addSaving(@Valid @RequestBody SavingRequest request){
+    SavingsEntity savings = userService.addSaving(request);
     return ResponseEntity.status(HttpStatus.CREATED).body(savings);
   }
 
@@ -121,9 +101,10 @@ public class UserController {
   }
 
   @DeleteMapping("/savings/{id}")
-  public ResponseEntity<SavingsEntity> deleteSaving(@RequestBody SavingRequest request){
-    SavingsEntity deleteSaving = userService.deleteSaving( request.getId() );
-    return ResponseEntity.ok(deleteSaving);
+  public ResponseEntity<Void> deleteSaving(@PathVariable Long id) {
+    userService.deleteSaving(id);
+    return ResponseEntity.noContent().build();
   }
+
 
 }

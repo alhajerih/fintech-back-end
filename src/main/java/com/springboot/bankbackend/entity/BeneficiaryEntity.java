@@ -2,92 +2,87 @@ package com.springboot.bankbackend.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-
-import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.*;
 
 @Entity
 public class BeneficiaryEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    private Long id;
+  private String name;
 
-    private String name;
+  private Boolean doesNeedGroceries;
 
-    private Boolean doesNeedGroceries;
+  private Double groceriesMultiplier;
 
-    private Double groceriesMultiplier;
+  @ManyToOne
+  @JsonBackReference
+  @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
+  private UserEntity user;
 
-    //private List<FixedPaymentEntity> fixedPayment;
+  @OneToMany(mappedBy = "beneficiary", cascade = CascadeType.ALL, orphanRemoval = true)
+  @JsonManagedReference
+  private List<FixedPaymentEntity> fixedPaymentList = new ArrayList<>();
 
-    @ManyToOne
-    @JsonBackReference
-    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
-    private UserEntity user;
+  public BeneficiaryEntity() {}
 
-    @OneToMany(mappedBy = "beneficiary")
-    @JsonManagedReference
-    private List<FixedPaymentEntity> fixedPaymentlist = new ArrayList<>();
+  public Long getId() {
+    return id;
+  }
 
-    public BeneficiaryEntity() {
-    }
+  public void setId(Long id) {
+    this.id = id;
+  }
 
-    public Long getId() {
-        return id;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+  public void setName(String name) {
+    this.name = name;
+  }
 
-    public String getName() {
-        return name;
-    }
+  public Boolean getDoesNeedGroceries() {
+    return doesNeedGroceries;
+  }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  public void setDoesNeedGroceries(Boolean doesNeedGroceries) {
+    this.doesNeedGroceries = doesNeedGroceries;
+  }
 
-    public Boolean getDoesNeedGroceries() {
-        return doesNeedGroceries;
-    }
+  public Double getGroceriesMultiplier() {
+    return groceriesMultiplier;
+  }
 
-    public void setDoesNeedGroceries(Boolean doesNeedGroceries) {
-        this.doesNeedGroceries = doesNeedGroceries;
-    }
+  public void setGroceriesMultiplier(Double groceriesMultiplier) {
+    this.groceriesMultiplier = groceriesMultiplier;
+  }
 
-    public Double getGroceriesMultiplier() {
-        return groceriesMultiplier;
-    }
+  //    public List<FixedPaymentEntity> getFixedPayment() {
+  //        return fixedPayment;
+  //    }
+  //
+  //    public void setFixedPayment(List<FixedPaymentEntity> fixedPayment) {
+  //        this.fixedPayment = fixedPayment;
+  //    }
 
-    public void setGroceriesMultiplier(Double groceriesMultiplier) {
-        this.groceriesMultiplier = groceriesMultiplier;
-    }
+  public UserEntity getUser() {
+    return user;
+  }
 
-//    public List<FixedPaymentEntity> getFixedPayment() {
-//        return fixedPayment;
-//    }
-//
-//    public void setFixedPayment(List<FixedPaymentEntity> fixedPayment) {
-//        this.fixedPayment = fixedPayment;
-//    }
+  public void setUser(UserEntity user) {
+    this.user = user;
+  }
 
-    public UserEntity getUser() {
-        return user;
-    }
+  public List<FixedPaymentEntity> getFixedPaymentList() {
+    return fixedPaymentList;
+  }
 
-    public void setUser(UserEntity user) {
-        this.user = user;
-    }
-
-    public List<FixedPaymentEntity> getFixedPaymentlist() {
-        return fixedPaymentlist;
-    }
-
-    public void setFixedPaymentlist(List<FixedPaymentEntity> fixedPaymentlist) {
-        this.fixedPaymentlist = fixedPaymentlist;
-    }
+  public void setFixedPaymentList(List<FixedPaymentEntity> fixedPaymentList) {
+    this.fixedPaymentList = fixedPaymentList;
+  }
 }

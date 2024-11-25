@@ -3,13 +3,17 @@ package com.springboot.bankbackend.bo;
 import com.springboot.bankbackend.utils.TransactionCategory;
 import com.springboot.bankbackend.utils.TransactionType;
 
-import java.time.LocalDateTime;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
-// todo remove as only for testing
 public class TransactionRequest {
+    @NotNull
     private Double amount;
+    @NotNull
+    @NotBlank(message = "Message must not be blank")
     private String message;
     private TransactionCategory transactionCategory;
+    @NotNull
     private TransactionType transactionType;
 
     public TransactionRequest() {}

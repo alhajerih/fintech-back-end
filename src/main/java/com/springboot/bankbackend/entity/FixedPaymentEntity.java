@@ -1,28 +1,34 @@
 package com.springboot.bankbackend.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 public class FixedPaymentEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 
-    private Long Id;
+    private Long id;
 
     private String name;
 
     private Double amount;
 
+    @ManyToOne
+    @JsonBackReference
+    @JoinColumn(name = "beneficiary_id", referencedColumnName = "id", nullable = false)
+    private BeneficiaryEntity beneficiary;
+
     public FixedPaymentEntity() {
     }
 
     public Long getId() {
-        return Id;
+        return id;
     }
 
     public void setId(Long id) {
-        Id = id;
+        this.id = id;
     }
 
     public String getName() {
@@ -40,10 +46,6 @@ public class FixedPaymentEntity {
     public void setAmount(Double amount) {
         this.amount = amount;
     }
-
-    @ManyToOne
-    @JoinColumn(name = "fixed_payment_id")
-    private BeneficiaryEntity beneficiary;
 
     public BeneficiaryEntity getBeneficiary() {
         return beneficiary;

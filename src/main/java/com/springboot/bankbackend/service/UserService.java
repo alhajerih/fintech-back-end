@@ -12,13 +12,16 @@ public interface UserService {
     UserResponse createUser(CreateUserRequest request);
     UserResponse updateProfile(UpdateProfileRequest request);
     UserResponse getProfile();
+    // Transaction
     TransactionEntity addTransaction(TransactionRequest request);
     List<TransactionEntity> getTransactions();
-    UserEntity getUserProfileByUsername(String username);
-    List<BeneficiaryEntity> getBeneficiariesByUsername(String username);
-    BeneficiaryEntity addBeneficiary(String username, BeneficiaryRequest request);
+    UserEntity getUserProfile();
+    // Beneficiary
+    List<BeneficiaryEntity> getBeneficiaries();
+    BeneficiaryEntity addBeneficiary(BeneficiaryRequest request);
     List<BeneficiaryEntity> getBeneficiary();
-    SavingsEntity addSaving(String username, SavingRequest request);
+    // Savings
+    SavingsEntity addSaving(SavingRequest request);
     List<SavingsEntity> getSaving();
-    SavingsEntity deleteSaving( Long id);
+    SavingsEntity deleteSaving(Long id);
 }

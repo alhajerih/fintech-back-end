@@ -1,14 +1,20 @@
 package com.springboot.bankbackend.bo;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
+
 public class SavingRequest {
     private Long id;
 
+    @NotNull
+    @NotBlank(message = "Name must not be blank")
     private String name;
-
+    @NotNull
     private Double amount;
-
+    @NotNull
     private Double amountAllocatedPerMonth;
-
+    @NotNull
     private Integer monthsUntilDeadline;
 
     public SavingRequest() {}

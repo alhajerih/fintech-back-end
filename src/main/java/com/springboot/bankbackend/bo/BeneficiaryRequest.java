@@ -1,26 +1,24 @@
 package com.springboot.bankbackend.bo;
 
+import javax.validation.constraints.NotNull;
+
+import javax.validation.constraints.NotBlank;
+
 public class BeneficiaryRequest {
-    private Long id;
+    @NotNull
+    @NotBlank(message = "Username must not be blank")
     private String name;
+    @NotNull
     private Boolean doesNeedGroceries;
+    @NotNull
     private Double groceriesMultiplier;
 
     public BeneficiaryRequest() {}
 
-    public BeneficiaryRequest(Long id, String name, Boolean doesNeedGroceries, Double groceriesMultiplier) {
-        this.id = id;
+    public BeneficiaryRequest(String name, Boolean doesNeedGroceries, Double groceriesMultiplier) {
         this.name = name;
         this.doesNeedGroceries = doesNeedGroceries;
         this.groceriesMultiplier = groceriesMultiplier;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getName() {

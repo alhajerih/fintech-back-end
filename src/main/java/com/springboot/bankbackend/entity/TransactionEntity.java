@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 public class TransactionEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long Id;
+    private Long id;
     private Double amount;
     private String message;
     private LocalDateTime dateTime;
@@ -55,11 +55,11 @@ public class TransactionEntity {
     }
 
     public Long getId() {
-        return Id;
+        return id;
     }
 
     public void setId(Long id) {
-        Id = id;
+        this.id = id;
     }
 
     public Double getAmount() {

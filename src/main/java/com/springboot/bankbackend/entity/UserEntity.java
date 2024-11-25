@@ -1,9 +1,7 @@
 package com.springboot.bankbackend.entity;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.springboot.bankbackend.utils.Roles;
-
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
@@ -12,15 +10,12 @@ import javax.persistence.*;
 public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long Id;
+    private Long id;
     private String  email;
     private String  profilePicture;
 
     @Enumerated(EnumType.STRING)
     private Roles role;
-
-    @ElementCollection
-    private List<String> beneficiaryAccountNumbers;
 
     @Column(name = "username", nullable = false)
     private String username;
@@ -28,15 +23,15 @@ public class UserEntity {
     @Column(name = "password", nullable = false)
     private String  password;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<TransactionEntity> transactions = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<BeneficiaryEntity> beneficiaries = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<SavingsEntity> savings = new ArrayList<>();
 
@@ -52,20 +47,20 @@ public class UserEntity {
         this.transactions.add(transaction);
     }
 
-    public void setRole(Roles role) {
-        this.role = role;
-    }
-
     public Roles getRole() {
         return role;
     }
 
+    public void setRole(Roles role) {
+        this.role = role;
+    }
+
     public Long getId() {
-        return Id;
+        return id;
     }
 
     public void setId(Long id) {
-        Id = id;
+        this.id = id;
     }
 
     public String getEmail() {
@@ -82,14 +77,6 @@ public class UserEntity {
 
     public void setProfilePicture(String profilePicture) {
         this.profilePicture = profilePicture;
-    }
-
-    public List<String> getBeneficiaryAccountNumbers() {
-        return beneficiaryAccountNumbers;
-    }
-
-    public void setBeneficiaryAccountNumbers(List<String> beneficiaryAccountNumbers) {
-        this.beneficiaryAccountNumbers = beneficiaryAccountNumbers;
     }
 
     public String getUsername() {

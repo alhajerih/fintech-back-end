@@ -1,11 +1,19 @@
 package com.springboot.bankbackend.bo;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CreateUserRequest {
+    @NotNull
+    @NotBlank(message = "Username must not be blank")
     private String username;
+    @NotNull
+    @NotBlank(message = "Email must not be blank")
     private String email;
+    @NotNull
+    @NotBlank(message = "Password must not be blank")
     private String password;
     private String profilePicture;
     private String role;

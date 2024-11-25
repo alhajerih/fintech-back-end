@@ -1,9 +1,12 @@
 package com.springboot.bankbackend.bo.auth;
 
+import javax.validation.constraints.NotNull;
+
 public class CreateLoginRequest {
 
+    @NotNull
     private String username;
-
+    @NotNull
     private String password;
 
     public String getUsername() {

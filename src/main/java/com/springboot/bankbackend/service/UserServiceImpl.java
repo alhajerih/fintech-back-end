@@ -11,14 +11,15 @@ import com.springboot.bankbackend.repository.TransactionRepository;
 import com.springboot.bankbackend.repository.UserRepository;
 import com.springboot.bankbackend.service.auth.CustomUserDetailsService;
 import com.springboot.bankbackend.utils.Roles;
+import java.time.LocalDateTime;
+import java.util.List;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.util.List;
+import javax.validation.Valid;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -28,6 +29,7 @@ public class UserServiceImpl implements UserService {
   private final TransactionRepository transactionRepository;
   private final BeneficiaryRepository beneficiaryRepository;
   private final SavingsRepository savingsRepository;
+
   public UserServiceImpl(
       UserRepository userRepository,
       BCryptPasswordEncoder bCryptPasswordEncoder,
@@ -55,29 +57,22 @@ public class UserServiceImpl implements UserService {
     transaction.setTransactionType(request.getTransactionType());
 
     // Get the currently authenticated user
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    String username = authentication.getName();
-
-    // Fetch the UserEntity from the database
-    UserEntity userEntity = userRepository.findByUsername(username)
-            .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    UserEntity user = getAuthenticatedUser();
 
     // Establish the relationship and save the transaction
-    transaction.setUser(userEntity); // Set the user in the transaction
+    transaction.setUser(user); // Set the user in the transaction
     transactionRepository.save(transaction);
 
     // Update the user's transaction list
-    userEntity.getTransactions().add(transaction);
-    userRepository.save(userEntity);
+    user.getTransactions().add(transaction);
+    userRepository.save(user);
 
     return transaction;
   }
 
   @Override
   public List<TransactionEntity> getTransactions() {
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    String username = authentication.getName();
-    CustomUserDetails user = userDetailsService.loadUserByUsername(username);
+    UserEntity user = getAuthenticatedUser();
     return user.getTransactions();
   }
 
@@ -96,7 +91,7 @@ public class UserServiceImpl implements UserService {
     userEntity.setEmail(request.getEmail());
     userEntity.setRole(Roles.user);
 
-    //todo put a real profile picture
+    // todo put a real profile picture
     userEntity.setProfilePicture("https://example.com/profile-picture.jpg");
 
     userEntity = userRepository.save(userEntity);
@@ -108,99 +103,95 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public UserResponse updateProfile(UpdateProfileRequest request) {
-    CustomUserDetails user = userDetailsService.loadUserByUsername(request.getUsername());
-    UserEntity userEntity = new UserEntity();
-    userEntity.setUsername(request.getUsername());
-    userEntity.setEmail(request.getEmail());
-    userEntity.setId(user.getId());
-    userEntity.setPassword(bCryptPasswordEncoder.encode(request.getPassword()));
-    userEntity = userRepository.save(userEntity);
+    UserEntity user = getAuthenticatedUser();
+    user.setUsername(request.getUsername());
+    user.setEmail(request.getEmail());
+    user.setId(user.getId());
+    user.setPassword(bCryptPasswordEncoder.encode(request.getPassword()));
+    user = userRepository.save(user);
     UserResponse response =
-            new UserResponse(userEntity.getId(), userEntity.getUsername(), userEntity.getEmail());
+        new UserResponse(user.getId(), user.getUsername(), user.getEmail());
 
     return response;
   }
 
   @Override
   public UserResponse getProfile() {
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    String username = authentication.getName();
-    CustomUserDetails userDetails = userDetailsService.loadUserByUsername(username);
+    UserEntity user = getAuthenticatedUser();
 
     // Build the UserResponse with filtered transactions
     UserResponse response =
-            new UserResponse(userDetails.getId(), userDetails.getUsername(), userDetails.getEmail());
-
+        new UserResponse(user.getId(), user.getUsername(), user.getEmail());
     return response;
   }
 
-  @Override
-  public UserEntity getUserProfileByUsername(String username){
-    UserEntity user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException(" Profile Not Found "));
+  public UserEntity getUserProfile() {
+    UserEntity user = getAuthenticatedUser();
 
     return user;
   }
 
-  @Override
-  public List<BeneficiaryEntity> getBeneficiariesByUsername(String username) {
-    UserEntity user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("beneficiary Not Found"));
+  public List<BeneficiaryEntity> getBeneficiaries() {
+    UserEntity user = getAuthenticatedUser();
     List<BeneficiaryEntity> beneficiaryEntities = user.getBeneficiaries();
 
     return beneficiaryEntities;
   }
 
-@Override
-  public BeneficiaryEntity addBeneficiary(String username, BeneficiaryRequest request){
-  UserEntity user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException(" User Not Found "));
-  BeneficiaryEntity beneficary = new BeneficiaryEntity();
-  beneficary.setDoesNeedGroceries(request.getDoesNeedGroceries());
-  beneficary.setGroceriesMultiplier(request.getGroceriesMultiplier());
-  beneficary.setUser(user);
-  BeneficiaryEntity userBeneficiary = beneficiaryRepository.save(beneficary);
-  user.addBeneficiary(userBeneficiary);
-  userRepository.save(user);
+  @Override
+  public BeneficiaryEntity addBeneficiary(BeneficiaryRequest request) {
+    UserEntity user = getAuthenticatedUser();
+    BeneficiaryEntity beneficary = new BeneficiaryEntity();
+    beneficary.setDoesNeedGroceries(request.getDoesNeedGroceries());
+    beneficary.setGroceriesMultiplier(request.getGroceriesMultiplier());
+    beneficary.setName(request.getName());
+    beneficary.setUser(user);
+    BeneficiaryEntity userBeneficiary = beneficiaryRepository.save(beneficary);
+    user.addBeneficiary(userBeneficiary);
+    userRepository.save(user);
 
-  return userBeneficiary;
-}
-
+    return userBeneficiary;
+  }
 
   @Override
-  public List<BeneficiaryEntity> getBeneficiary(){
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    String username = authentication.getName();
-    UserEntity user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException(" User Not Found "));
+  public List<BeneficiaryEntity> getBeneficiary() {
+    UserEntity user = getAuthenticatedUser();
     return user.getBeneficiaries();
-}
-@Override
-public SavingsEntity addSaving(String username, SavingRequest request){
-    UserEntity user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException(" User Not Found"));
+  }
+
+  @Override
+  public SavingsEntity addSaving(SavingRequest request) {
+    UserEntity user = getAuthenticatedUser();
     SavingsEntity newSaving = new SavingsEntity();
     newSaving.setAmount(request.getAmount());
     newSaving.setAmountAllocatedPerMonth(request.getAmountAllocatedPerMonth());
     newSaving.setMonthsUntilDeadline(request.getMonthsUntilDeadline());
     newSaving.setName(request.getName());
-    newSaving.setId(request.getId());
+    newSaving.setUser(user);
+
     SavingsEntity userSaving = savingsRepository.save(newSaving);
     user.addSaving(userSaving);
     userRepository.save(user);
 
     return userSaving;
-}
+  }
 
-@Override
-  public List<SavingsEntity> getSaving(){
-  Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-  String username = authentication.getName();
-  UserEntity user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException(" User Not Found "));
+  @Override
+  public List<SavingsEntity> getSaving() {
+    UserEntity user = getAuthenticatedUser();
+    return user.getSavings();
+  }
 
-  return user.getSavings();
-}
+  public SavingsEntity deleteSaving(Long id) {
+    SavingsEntity saving = savingsRepository.getById(id);
+    savingsRepository.deleteById(id);
+    return saving;
+  }
 
-public SavingsEntity deleteSaving( Long id ){
-  SavingsEntity saving = savingsRepository.getById(id);
-  savingsRepository.deleteById(id);
-
-  return saving;
-}
-
+  private UserEntity getAuthenticatedUser() {
+    String username = SecurityContextHolder.getContext().getAuthentication().getName();
+    return userRepository
+        .findByUsername(username)
+        .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+  }
 }
