@@ -1,25 +1,16 @@
 package com.springboot.bankbackend.service;
 
 import com.springboot.bankbackend.bo.*;
-import com.springboot.bankbackend.entity.BeneficiaryEntity;
-import com.springboot.bankbackend.entity.SavingsEntity;
-import com.springboot.bankbackend.entity.TransactionEntity;
-import com.springboot.bankbackend.entity.UserEntity;
-import com.springboot.bankbackend.repository.BeneficiaryRepository;
-import com.springboot.bankbackend.repository.SavingsRepository;
-import com.springboot.bankbackend.repository.TransactionRepository;
-import com.springboot.bankbackend.repository.UserRepository;
+import com.springboot.bankbackend.entity.*;
+import com.springboot.bankbackend.repository.*;
 import com.springboot.bankbackend.service.auth.CustomUserDetailsService;
 import com.springboot.bankbackend.utils.Roles;
 import java.time.LocalDateTime;
 import java.util.List;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import javax.validation.Valid;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -29,6 +20,7 @@ public class UserServiceImpl implements UserService {
   private final TransactionRepository transactionRepository;
   private final BeneficiaryRepository beneficiaryRepository;
   private final SavingsRepository savingsRepository;
+  private final FixedPaymentRepository fixedPaymentRepository;
 
   public UserServiceImpl(
       UserRepository userRepository,
@@ -36,13 +28,15 @@ public class UserServiceImpl implements UserService {
       CustomUserDetailsService userDetailsService,
       TransactionRepository transactionRepository,
       BeneficiaryRepository beneficiaryRepository,
-      SavingsRepository savingsRepository) {
+      SavingsRepository savingsRepository,
+      FixedPaymentRepository fixedPaymentRepository) {
     this.userRepository = userRepository;
     this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     this.userDetailsService = userDetailsService;
     this.transactionRepository = transactionRepository;
     this.beneficiaryRepository = beneficiaryRepository;
     this.savingsRepository = savingsRepository;
+    this.fixedPaymentRepository = fixedPaymentRepository;
   }
 
   // Add transaction
@@ -115,8 +109,7 @@ public class UserServiceImpl implements UserService {
     user.setId(user.getId());
     user.setPassword(bCryptPasswordEncoder.encode(request.getPassword()));
     user = userRepository.save(user);
-    UserResponse response =
-        new UserResponse(user.getId(), user.getUsername(), user.getEmail());
+    UserResponse response = new UserResponse(user.getId(), user.getUsername(), user.getEmail());
 
     return response;
   }
@@ -126,8 +119,7 @@ public class UserServiceImpl implements UserService {
     UserEntity user = getAuthenticatedUser();
 
     // Build the UserResponse with filtered transactions
-    UserResponse response =
-        new UserResponse(user.getId(), user.getUsername(), user.getEmail());
+    UserResponse response = new UserResponse(user.getId(), user.getUsername(), user.getEmail());
     return response;
   }
 
@@ -197,6 +189,27 @@ public class UserServiceImpl implements UserService {
     SavingsEntity saving = savingsRepository.getById(id);
     savingsRepository.deleteById(id);
     return saving;
+  }
+
+  @Override
+  public FixedPaymentEntity addFixedPayment(FixedPaymentRequest request, Long benficiaryId) {
+    BeneficiaryEntity beneficiary = beneficiaryRepository.getById(benficiaryId);
+    FixedPaymentEntity newFixedPayment = new FixedPaymentEntity();
+    newFixedPayment.setAmount(request.getAmount());
+    newFixedPayment.setName(request.getName());
+    newFixedPayment.setBeneficiary(beneficiary);
+    FixedPaymentEntity userFixedPayment = fixedPaymentRepository.save(newFixedPayment);
+
+    beneficiary.addFixedPayment(userFixedPayment);
+    beneficiaryRepository.save(beneficiary);
+
+    return userFixedPayment;
+  }
+
+  @Override
+  public List<FixedPaymentEntity> getFixedPayment(Long beneficiaryId) {
+    BeneficiaryEntity beneficiary = beneficiaryRepository.getById(beneficiaryId);
+    return beneficiary.getFixedPaymentList();
   }
 
   private UserEntity getAuthenticatedUser() {
