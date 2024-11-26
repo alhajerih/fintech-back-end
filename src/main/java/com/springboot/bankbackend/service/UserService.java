@@ -16,10 +16,12 @@ public interface UserService {
     TransactionEntity addTransaction(TransactionRequest request);
     List<TransactionEntity> getTransactions();
     UserEntity getUserProfile();
+    TransactionEntity deleteTransaction(Long id);
     // Beneficiary
     List<BeneficiaryEntity> getBeneficiaries();
     BeneficiaryEntity addBeneficiary(BeneficiaryRequest request);
     List<BeneficiaryEntity> getBeneficiary();
+    BeneficiaryEntity deleteBeneficiary(Long id);
     // Savings
     SavingsEntity addSaving(SavingRequest request);
     List<SavingsEntity> getSaving();

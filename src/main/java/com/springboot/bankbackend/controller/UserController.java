@@ -75,6 +75,12 @@ public class UserController {
     }
   }
 
+  @DeleteMapping("/transactions/{id}")
+  public ResponseEntity<Void> deleteTransaction(@PathVariable Long id){
+    userService.deleteTransaction(id);
+    return ResponseEntity.noContent().build();
+  }
+
   @PostMapping("/beneficiaries")
   public ResponseEntity<BeneficiaryEntity> addBeneficiary(@Valid @RequestBody BeneficiaryRequest request){
     BeneficiaryEntity beneficiary = userService.addBeneficiary(request);
@@ -86,6 +92,11 @@ public class UserController {
   public ResponseEntity<List<BeneficiaryEntity>> getBeneficiaries(){
     List<BeneficiaryEntity> beneficiaries = userService.getBeneficiary();
     return ResponseEntity.ok(beneficiaries);
+  }
+  @DeleteMapping("/beneficiaries/{id}")
+  public ResponseEntity<Void> deleteBeneficiary(@PathVariable Long id){
+    userService.deleteBeneficiary(id);
+    return ResponseEntity.noContent().build();
   }
 
   @PostMapping("/savings")
@@ -105,6 +116,7 @@ public class UserController {
     userService.deleteSaving(id);
     return ResponseEntity.noContent().build();
   }
+
 
 
 }

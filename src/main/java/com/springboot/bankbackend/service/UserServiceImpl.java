@@ -76,6 +76,12 @@ public class UserServiceImpl implements UserService {
     return user.getTransactions();
   }
 
+  public TransactionEntity deleteTransaction(Long id){
+    TransactionEntity transaction = transactionRepository.getById(id);
+    transactionRepository.deleteById(id);
+    return transaction;
+  }
+
   @Override
   public UserResponse createUser(CreateUserRequest request) {
 
@@ -157,6 +163,11 @@ public class UserServiceImpl implements UserService {
   public List<BeneficiaryEntity> getBeneficiary() {
     UserEntity user = getAuthenticatedUser();
     return user.getBeneficiaries();
+  }
+  public BeneficiaryEntity deleteBeneficiary(Long id){
+    BeneficiaryEntity beneficiary = beneficiaryRepository.getById(id);
+    beneficiaryRepository.deleteById(id);
+    return beneficiary;
   }
 
   @Override
