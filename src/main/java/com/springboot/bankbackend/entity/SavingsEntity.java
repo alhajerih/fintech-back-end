@@ -20,6 +20,8 @@ public class SavingsEntity {
 
   private Integer monthsUntilDeadline;
 
+  private Long iconId;
+
   @ManyToOne
   @JsonBackReference
   @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
@@ -75,4 +77,8 @@ public class SavingsEntity {
   public void setMonthsUntilDeadline(Integer monthsUntilDeadline) {
     this.monthsUntilDeadline = monthsUntilDeadline;
   }
+
+  public Long getIconId() { return iconId; }
+
+  public void setIconId(Long iconId) { this.iconId = iconId; }
 }

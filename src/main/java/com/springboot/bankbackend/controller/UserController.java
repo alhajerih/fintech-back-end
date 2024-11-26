@@ -76,6 +76,12 @@ public class UserController {
     }
   }
 
+  @DeleteMapping("/transactions/{id}")
+  public ResponseEntity<Void> deleteTransaction(@PathVariable Long id){
+    userService.deleteTransaction(id);
+    return ResponseEntity.noContent().build();
+  }
+
   @PostMapping("/beneficiaries")
   public ResponseEntity<BeneficiaryEntity> addBeneficiary(@Valid @RequestBody BeneficiaryRequest request){
     BeneficiaryEntity beneficiary = userService.addBeneficiary(request);
@@ -87,6 +93,11 @@ public class UserController {
   public ResponseEntity<List<BeneficiaryEntity>> getBeneficiaries(){
     List<BeneficiaryEntity> beneficiaries = userService.getBeneficiary();
     return ResponseEntity.ok(beneficiaries);
+  }
+  @DeleteMapping("/beneficiaries/{id}")
+  public ResponseEntity<Void> deleteBeneficiary(@PathVariable Long id){
+    userService.deleteBeneficiary(id);
+    return ResponseEntity.noContent().build();
   }
 
   @PostMapping("/savings")
@@ -108,15 +119,35 @@ public class UserController {
   }
 
   // Fixed payments
-  @GetMapping("savings/fixed-payments/{beneficiaryId}")
-  public ResponseEntity<List<FixedPaymentEntity>> getFixedPayments(@PathVariable Long beneficiaryId) {
-    List<FixedPaymentEntity> fixedPayments = userService.getFixedPayment(beneficiaryId);
-    return ResponseEntity.ok(fixedPayments);
-  }
 
   @PostMapping("savings/fixed-payments/{beneficiaryId}")
   public ResponseEntity<FixedPaymentEntity> addFixedPayment(@Valid @RequestBody FixedPaymentRequest request, @PathVariable Long beneficiaryId) {
     FixedPaymentEntity fixedPayment = userService.addFixedPayment(request, beneficiaryId);
     return ResponseEntity.status(HttpStatus.CREATED).body(fixedPayment);
   }
+
+  @GetMapping("savings/fixed-payments/{beneficiaryId}")
+  public ResponseEntity<List<FixedPaymentEntity>> getFixedPayments(@PathVariable Long beneficiaryId) {
+    List<FixedPaymentEntity> fixedPayments = userService.getFixedPayment(beneficiaryId);
+    return ResponseEntity.ok(fixedPayments);
+  }
+
+@DeleteMapping("savings/fixed-payments/{paymentId}")
+  public ResponseEntity<Void> deleteFixedPayment(@PathVariable Long paymentId){
+    userService.deleteFixedPayment(paymentId);
+    return ResponseEntity.noContent().build();
+}
+
+@PostMapping("/savings/{savingId}")
+public ResponseEntity<Void> addFavouriteSaving(@PathVariable Long savingId) {
+    userService.addFavouriteSaving(savingId);
+    return ResponseEntity.noContent().build();
+}
+
+@PutMapping("/savings/icon/{savingId}")
+  public ResponseEntity<SavingsEntity> addFavouriteIcon(@RequestBody FavoriteSavingRequest request, @PathVariable Long savingId){
+    SavingsEntity updateSaving = userService.addFavouriteIcon(request);
+    return ResponseEntity.ok(updateSaving);
+}
+
 }
