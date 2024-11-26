@@ -13,6 +13,7 @@ public class UserEntity {
     private Long id;
     private String  email;
     private String  profilePicture;
+    private Long  favoriteSavingId;
 
     @Enumerated(EnumType.STRING)
     private Roles role;
@@ -111,11 +112,13 @@ public class UserEntity {
         this.savings = savings;
     }
 
+    public Long getFavoriteSavingId() { return favoriteSavingId;}
+
+    public void setFavoriteSavingId(Long favoriteSavingId) {this.favoriteSavingId = favoriteSavingId;}
+
     public void addBeneficiary(BeneficiaryEntity beneficiary) {
         beneficiaries.add(beneficiary);
     }
-    public void addSaving(SavingsEntity saving){
-        savings.add(saving);
 
-    }
+    public void addSaving(SavingsEntity saving){ savings.add(saving); }
 }

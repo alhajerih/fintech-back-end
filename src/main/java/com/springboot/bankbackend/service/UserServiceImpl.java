@@ -151,6 +151,8 @@ public class UserServiceImpl implements UserService {
     return userBeneficiary;
   }
 
+
+
   @Override
   public List<BeneficiaryEntity> getBeneficiary() {
     UserEntity user = getAuthenticatedUser();
@@ -212,10 +214,35 @@ public class UserServiceImpl implements UserService {
     return beneficiary.getFixedPaymentList();
   }
 
+  public FixedPaymentEntity deleteFixedPayment(Long paymentId){
+    FixedPaymentEntity fixedPayment = fixedPaymentRepository.getById(paymentId);
+    fixedPaymentRepository.deleteById(paymentId);
+    return fixedPayment;
+  }
+
+
   private UserEntity getAuthenticatedUser() {
     String username = SecurityContextHolder.getContext().getAuthentication().getName();
     return userRepository
         .findByUsername(username)
         .orElseThrow(() -> new UsernameNotFoundException("User not found"));
   }
+
+  @Override
+  public UserEntity addFavouriteSaving(Long savingId){
+    UserEntity user = getAuthenticatedUser();
+    user.setFavoriteSavingId(savingId);
+    user = userRepository.save(user);
+    return user;
+  }
+
+@Override
+  public SavingsEntity addFavouriteIcon(FavoriteSavingRequest request){
+    SavingsEntity saving = savingsRepository.findById(request.getId())
+            .orElseThrow(() -> new IllegalArgumentException("Saving not found "+ request.getId()));
+    saving.setIconId(request.getId());
+    return savingsRepository.save(saving);
+
+}
+
 }
