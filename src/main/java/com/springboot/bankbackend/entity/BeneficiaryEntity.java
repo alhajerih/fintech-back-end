@@ -62,14 +62,6 @@ public class BeneficiaryEntity {
     this.groceriesMultiplier = groceriesMultiplier;
   }
 
-  //    public List<FixedPaymentEntity> getFixedPayment() {
-  //        return fixedPayment;
-  //    }
-  //
-  //    public void setFixedPayment(List<FixedPaymentEntity> fixedPayment) {
-  //        this.fixedPayment = fixedPayment;
-  //    }
-
   public UserEntity getUser() {
     return user;
   }
@@ -84,5 +76,9 @@ public class BeneficiaryEntity {
 
   public void setFixedPaymentList(List<FixedPaymentEntity> fixedPaymentList) {
     this.fixedPaymentList = fixedPaymentList;
+  }
+
+  public void addFixedPayment(FixedPaymentEntity fixedPayment) {
+    fixedPaymentList.add(fixedPayment);
   }
 }

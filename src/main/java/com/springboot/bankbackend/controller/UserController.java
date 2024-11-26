@@ -2,6 +2,7 @@ package com.springboot.bankbackend.controller;
 
 import com.springboot.bankbackend.bo.*;
 import com.springboot.bankbackend.entity.BeneficiaryEntity;
+import com.springboot.bankbackend.entity.FixedPaymentEntity;
 import com.springboot.bankbackend.entity.SavingsEntity;
 import com.springboot.bankbackend.entity.TransactionEntity;
 import com.springboot.bankbackend.service.UserService;
@@ -106,5 +107,16 @@ public class UserController {
     return ResponseEntity.noContent().build();
   }
 
+  // Fixed payments
+  @GetMapping("savings/fixed-payments/{beneficiaryId}")
+  public ResponseEntity<List<FixedPaymentEntity>> getFixedPayments(@PathVariable Long beneficiaryId) {
+    List<FixedPaymentEntity> fixedPayments = userService.getFixedPayment(beneficiaryId);
+    return ResponseEntity.ok(fixedPayments);
+  }
 
+  @PostMapping("savings/fixed-payments/{beneficiaryId}")
+  public ResponseEntity<FixedPaymentEntity> addFixedPayment(@Valid @RequestBody FixedPaymentRequest request, @PathVariable Long beneficiaryId) {
+    FixedPaymentEntity fixedPayment = userService.addFixedPayment(request, beneficiaryId);
+    return ResponseEntity.status(HttpStatus.CREATED).body(fixedPayment);
+  }
 }
