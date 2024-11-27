@@ -191,8 +191,8 @@ public class UserServiceImpl implements UserService {
     UserEntity user = getAuthenticatedUser();
     SavingsEntity newSaving = new SavingsEntity();
     newSaving.setAmount(request.getAmount());
-//    newSaving.setAmountAllocatedPerMonth(request.getAmountAllocatedPerMonth());
-//    newSaving.setMonthsUntilDeadline(request.getMonthsUntilDeadline());
+    newSaving.setAmountAllocatedPerMonth(request.getAmountAllocatedPerMonth());
+    newSaving.setMonthsUntilDeadline(request.getMonthsUntilDeadline());
     newSaving.setName(request.getName());
     newSaving.setUser(user);
     newSaving.setIcon(request.getIcon());

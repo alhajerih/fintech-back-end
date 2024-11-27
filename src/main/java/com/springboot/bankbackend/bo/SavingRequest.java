@@ -12,22 +12,22 @@ public class SavingRequest {
     private String name;
     @NotNull
     private Double amount;
-//    @NotNull
-//    private Double amountAllocatedPerMonth;
-//    @NotNull
-//    private Integer monthsUntilDeadline;
+    @NotNull
+    private Double amountAllocatedPerMonth;
+    @NotNull
+    private Integer monthsUntilDeadline;
     private String icon;
 
     public SavingRequest() {}
 
-    public SavingRequest(Long id, String name, Double amount, String icon) {
-        this.id = id;
-        this.name = name;
-        this.amount = amount;
+//    public SavingRequest(Long id, String name, Double amount, String icon) {
+//        this.id = id;
+//        this.name = name;
+//        this.amount = amount;
 //        this.amountAllocatedPerMonth = amountAllocatedPerMonth;
 //        this.monthsUntilDeadline = monthsUntilDeadline;
-        this.icon = icon;
-    }
+//        this.icon = icon;
+//    }
 
     public String getIcon() {
         return icon;
@@ -61,19 +61,19 @@ public class SavingRequest {
         this.amount = amount;
     }
 
-//    public Double getAmountAllocatedPerMonth() {
-//        return amountAllocatedPerMonth;
-//    }
-//
-//    public void setAmountAllocatedPerMonth(Double amountAllocatedPerMonth) {
-//        this.amountAllocatedPerMonth = amountAllocatedPerMonth;
-//    }
-//
-//    public Integer getMonthsUntilDeadline() {
-//        return monthsUntilDeadline;
-//    }
-//
-//    public void setMonthsUntilDeadline(Integer monthsUntilDeadline) {
-//        this.monthsUntilDeadline = monthsUntilDeadline;
-//    }
+    public Double getAmountAllocatedPerMonth() {
+        return amountAllocatedPerMonth;
+    }
+
+    public void setAmountAllocatedPerMonth(Double amountAllocatedPerMonth) {
+        this.amountAllocatedPerMonth = amountAllocatedPerMonth;
+    }
+
+    public Integer getMonthsUntilDeadline() {
+        return monthsUntilDeadline;
+    }
+
+    public void setMonthsUntilDeadline(Integer monthsUntilDeadline) {
+        this.monthsUntilDeadline = monthsUntilDeadline;
+    }
 }
