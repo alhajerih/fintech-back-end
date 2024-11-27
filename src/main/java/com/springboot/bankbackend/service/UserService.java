@@ -30,6 +30,8 @@ public interface UserService {
 
   List<SavingsEntity> getSaving();
 
+  SavingsEntity updateSaving(Long id, Double amountToAdd);
+
   SavingsEntity deleteSaving(Long id);
 
   // Fixed payment

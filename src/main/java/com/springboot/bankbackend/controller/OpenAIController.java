@@ -1,9 +1,8 @@
 package com.springboot.bankbackend.controller;
 
+import com.springboot.bankbackend.bo.ChatRequest;
 import com.springboot.bankbackend.service.OpenAIService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class OpenAIController {
@@ -14,8 +13,8 @@ public class OpenAIController {
         this.openAIService = openAIService;
     }
 
-    @GetMapping("/api/v1/auth/chat")
-    public String chat(@RequestParam String prompt) {
-        return openAIService.getChatGPTResponse(prompt);
+    @PostMapping("/api/v1/user/chat")
+    public String chat(@RequestBody ChatRequest request) {
+        return openAIService.getChatGPTResponse(request.getPrompt());
     }
 }

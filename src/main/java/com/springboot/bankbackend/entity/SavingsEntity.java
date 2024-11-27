@@ -16,9 +16,16 @@ public class SavingsEntity {
 
   private Double amount;
 
+  @Column(nullable = false)
+  private Double currentAmount = 0.0;
+
   private Double amountAllocatedPerMonth;
 
   private Integer monthsUntilDeadline;
+
+  private Long iconId;
+
+  private String icon;
 
   @ManyToOne
   @JsonBackReference
@@ -28,12 +35,36 @@ public class SavingsEntity {
   public SavingsEntity() {
   }
 
+  public String getIcon() {
+    return icon;
+  }
+
+  public void setIcon(String icon) {
+    this.icon = icon;
+  }
+
   public UserEntity getUser() {
     return user;
   }
 
   public void setUser(UserEntity user) {
     this.user = user;
+  }
+
+  public Double getCurrentAmount() {
+    return currentAmount;
+  }
+
+  public void setCurrentAmount(Double currentAmount) {
+    this.currentAmount = currentAmount;
+  }
+
+  public Long getIconId() {
+    return iconId;
+  }
+
+  public void setIconId(Long iconId) {
+    this.iconId = iconId;
   }
 
   public Long getId() {

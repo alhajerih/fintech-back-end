@@ -15,6 +15,8 @@ public class OpenAIService {
 
   private final String API_URL = "https://api.openai.com/v1/chat/completions";
 
+  private final String sampleResponse = "";
+
   @Value("${key:default}")
   private String API_KEY;
 
@@ -42,4 +44,5 @@ public class OpenAIService {
 
     return response.getBody();
   }
+
 }

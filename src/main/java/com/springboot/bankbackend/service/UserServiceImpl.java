@@ -1,16 +1,23 @@
 package com.springboot.bankbackend.service;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.springboot.bankbackend.bo.*;
 import com.springboot.bankbackend.entity.*;
 import com.springboot.bankbackend.repository.*;
 import com.springboot.bankbackend.service.auth.CustomUserDetailsService;
 import com.springboot.bankbackend.utils.Roles;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
+
+import com.springboot.bankbackend.utils.TransactionCategory;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import static com.springboot.bankbackend.utils.TransactionCategory.*;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -21,6 +28,7 @@ public class UserServiceImpl implements UserService {
   private final BeneficiaryRepository beneficiaryRepository;
   private final SavingsRepository savingsRepository;
   private final FixedPaymentRepository fixedPaymentRepository;
+  private final OpenAIService openAIService;
 
   public UserServiceImpl(
       UserRepository userRepository,
@@ -29,7 +37,8 @@ public class UserServiceImpl implements UserService {
       TransactionRepository transactionRepository,
       BeneficiaryRepository beneficiaryRepository,
       SavingsRepository savingsRepository,
-      FixedPaymentRepository fixedPaymentRepository) {
+      FixedPaymentRepository fixedPaymentRepository,
+      OpenAIService openAIService) {
     this.userRepository = userRepository;
     this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     this.userDetailsService = userDetailsService;
@@ -37,6 +46,7 @@ public class UserServiceImpl implements UserService {
     this.beneficiaryRepository = beneficiaryRepository;
     this.savingsRepository = savingsRepository;
     this.fixedPaymentRepository = fixedPaymentRepository;
+    this.openAIService = openAIService;
   }
 
   // Add transaction
@@ -50,6 +60,20 @@ public class UserServiceImpl implements UserService {
     transaction.setTransactionCategory(request.getTransactionCategory());
     transaction.setTransactionType(request.getTransactionType());
 
+    // If the transaction is uncategorized, use OpenAI to determine its category
+    if (request.getTransactionCategory() == TransactionCategory.UNCATEGORIZED) {
+      String prompt = "Only reply with the category of the transaction. " +
+              "The transaction is: \"" + request.getMessage() + "\". " +
+              "Possible categories are: " + String.join(", ", getTransactionCategories()) + ".";
+
+      String response = openAIService.getChatGPTResponse(prompt);
+      try {
+        // Parse the response to match a TransactionCategory enum value
+        transaction.setTransactionCategory(TransactionCategory.valueOf(extractCategoryFromResponse(response).trim().toUpperCase()));
+      } catch (IllegalArgumentException e) {
+        throw new RuntimeException("Invalid category received from OpenAI: " + response);
+      }
+    }
     // Get the currently authenticated user
     UserEntity user = getAuthenticatedUser();
 
@@ -156,10 +180,11 @@ public class UserServiceImpl implements UserService {
     UserEntity user = getAuthenticatedUser();
     SavingsEntity newSaving = new SavingsEntity();
     newSaving.setAmount(request.getAmount());
-    newSaving.setAmountAllocatedPerMonth(request.getAmountAllocatedPerMonth());
-    newSaving.setMonthsUntilDeadline(request.getMonthsUntilDeadline());
+//    newSaving.setAmountAllocatedPerMonth(request.getAmountAllocatedPerMonth());
+//    newSaving.setMonthsUntilDeadline(request.getMonthsUntilDeadline());
     newSaving.setName(request.getName());
     newSaving.setUser(user);
+    newSaving.setIcon(request.getIcon());
 
     SavingsEntity userSaving = savingsRepository.save(newSaving);
     user.addSaving(userSaving);
@@ -174,6 +199,15 @@ public class UserServiceImpl implements UserService {
     return user.getSavings();
   }
 
+  @Override
+  public SavingsEntity updateSaving(Long id, Double amountToAdd) {
+    // todo business logic
+    SavingsEntity saving = savingsRepository.getById(id);
+    saving.setCurrentAmount(saving.getCurrentAmount() + amountToAdd);
+    return savingsRepository.save(saving);
+  }
+
+  @Override
   public SavingsEntity deleteSaving(Long id) {
     SavingsEntity saving = savingsRepository.getById(id);
     savingsRepository.deleteById(id);
@@ -201,10 +235,34 @@ public class UserServiceImpl implements UserService {
     return beneficiary.getFixedPaymentList();
   }
 
+
   private UserEntity getAuthenticatedUser() {
     String username = SecurityContextHolder.getContext().getAuthentication().getName();
     return userRepository
         .findByUsername(username)
         .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+  }
+
+  private String[] getTransactionCategories() {
+    // Exclude UNCATEGORIZED from the possible categories for OpenAI
+    return Arrays.stream(TransactionCategory.values())
+            .filter(category -> category != TransactionCategory.UNCATEGORIZED)
+            .map(Enum::name)
+            .toArray(String[]::new);
+  }
+
+  private String extractCategoryFromResponse(String response) {
+    try {
+      ObjectMapper objectMapper = new ObjectMapper();
+      JsonNode rootNode = objectMapper.readTree(response);
+      return rootNode
+              .path("choices")
+              .get(0)
+              .path("message")
+              .path("content")
+              .asText();
+    } catch (Exception e) {
+      throw new RuntimeException("Error parsing OpenAI response: " + response, e);
+    }
   }
 }
