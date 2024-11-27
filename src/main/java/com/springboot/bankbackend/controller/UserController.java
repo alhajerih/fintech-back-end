@@ -85,11 +85,11 @@ public class UserController {
     }
   }
 
-  @DeleteMapping("/transactions/{id}")
-  public ResponseEntity<Void> deleteTransaction(@PathVariable Long id){
-    userService.deleteTransaction(id);
-    return ResponseEntity.noContent().build();
-  }
+//  @DeleteMapping("/transactions/{id}")
+//  public ResponseEntity<Void> deleteTransaction(@PathVariable Long id){
+//    userService.deleteTransaction(id);
+//    return ResponseEntity.noContent().build();
+//  }
 
   @PostMapping("/beneficiaries")
   public ResponseEntity<BeneficiaryEntity> addBeneficiary(@Valid @RequestBody BeneficiaryRequest request){
@@ -165,10 +165,10 @@ public ResponseEntity<Void> addFavouriteSaving(@PathVariable Long savingId) {
     return ResponseEntity.noContent().build();
 }
 
-@PutMapping("/savings/icon/{savingId}")
-  public ResponseEntity<SavingsEntity> addFavouriteIcon(@RequestBody FavoriteSavingRequest request, @PathVariable Long savingId){
-    SavingsEntity updateSaving = userService.addFavouriteIcon(request);
-    return ResponseEntity.ok(updateSaving);
-}
+//@PutMapping("/savings/icon/{savingId}")
+//  public ResponseEntity<SavingsEntity> addFavouriteIcon(@RequestBody FavoriteSavingRequest request, @PathVariable Long savingId){
+//    SavingsEntity updateSaving = userService.addFavouriteIcon(request);
+//    return ResponseEntity.ok(updateSaving);
+//}
 
 }

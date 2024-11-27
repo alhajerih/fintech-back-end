@@ -11,16 +11,14 @@ public interface UserService {
 
   UserResponse getProfile();
 
-  UserEntity addFavouriteSaving(Long savingId);
-
-  SavingsEntity addFavouriteIcon(FavoriteSavingRequest request);
+  //  SavingsEntity addFavouriteIcon(FavoriteSavingRequest request);
 
   // Transaction
   TransactionEntity addTransaction(TransactionRequest request);
 
   List<TransactionEntity> getTransactions();
 
-  TransactionEntity deleteTransaction(Long id);
+  //  TransactionEntity deleteTransaction(Long id);
 
   UserEntity getUserProfile();
 
@@ -29,7 +27,7 @@ public interface UserService {
 
   BeneficiaryEntity addBeneficiary(BeneficiaryRequest request);
 
-    BeneficiaryEntity deleteBeneficiary(Long id);
+  BeneficiaryEntity deleteBeneficiary(Long id);
 
   List<BeneficiaryEntity> getBeneficiary();
 
@@ -42,11 +40,12 @@ public interface UserService {
 
   SavingsEntity deleteSaving(Long id);
 
+  SavingsEntity addFavouriteSaving(Long savingId);
+
   // Fixed payment
   FixedPaymentEntity addFixedPayment(FixedPaymentRequest request, Long benficiaryId);
 
   List<FixedPaymentEntity> getFixedPayment(Long beneficiaryId);
 
   FixedPaymentEntity deleteFixedPayment(Long paymentId);
-
 }

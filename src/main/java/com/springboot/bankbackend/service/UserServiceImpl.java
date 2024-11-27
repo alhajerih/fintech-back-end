@@ -12,10 +12,12 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.springboot.bankbackend.utils.TransactionCategory;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import static com.springboot.bankbackend.utils.TransactionCategory.*;
 
@@ -170,6 +172,15 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
+  public BeneficiaryEntity deleteBeneficiary(Long id) {
+    UserEntity user = getAuthenticatedUser();
+    BeneficiaryEntity beneficiary = beneficiaryRepository.getById(id);
+    // Delete the beneficiary from database
+    beneficiaryRepository.delete(beneficiary);
+    return beneficiary;
+  }
+
+  @Override
   public List<BeneficiaryEntity> getBeneficiary() {
     UserEntity user = getAuthenticatedUser();
     return user.getBeneficiaries();
@@ -191,6 +202,16 @@ public class UserServiceImpl implements UserService {
     userRepository.save(user);
 
     return userSaving;
+  }
+
+  @Override
+  public SavingsEntity addFavouriteSaving(Long savingId) {
+    UserEntity user = getAuthenticatedUser();
+    SavingsEntity saving = savingsRepository.getById(savingId);
+    user.setFavoriteSavingId(saving.getId());
+    userRepository.save(user);
+
+    return saving;
   }
 
   @Override
@@ -233,6 +254,13 @@ public class UserServiceImpl implements UserService {
   public List<FixedPaymentEntity> getFixedPayment(Long beneficiaryId) {
     BeneficiaryEntity beneficiary = beneficiaryRepository.getById(beneficiaryId);
     return beneficiary.getFixedPaymentList();
+  }
+
+  @Override
+  public FixedPaymentEntity deleteFixedPayment(Long id) {
+    FixedPaymentEntity fixedPayment = fixedPaymentRepository.getById(id);
+    fixedPaymentRepository.delete(fixedPayment);
+    return fixedPayment;
   }
 
 
