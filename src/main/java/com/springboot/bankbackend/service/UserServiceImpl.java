@@ -18,23 +18,22 @@ public class UserServiceImpl implements UserService {
   private final BCryptPasswordEncoder bCryptPasswordEncoder;
   private final CustomUserDetailsService userDetailsService;
 
-  private final OpenAIService openAIService;
+//  private final OpenAIService openAIService;
 
   public UserServiceImpl(
       UserRepository userRepository,
       BCryptPasswordEncoder bCryptPasswordEncoder,
-      CustomUserDetailsService userDetailsService,
-      OpenAIService openAIService) {
+      CustomUserDetailsService userDetailsService
+      ) {
     this.userRepository = userRepository;
     this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     this.userDetailsService = userDetailsService;
-    this.openAIService = openAIService;
   }
 
 
 
 
-
+// create new user
   @Override
   public UserResponse createUser(CreateUserRequest request) {
 
@@ -53,7 +52,7 @@ public class UserServiceImpl implements UserService {
     userEntity = userRepository.save(userEntity);
 
     UserResponse response =
-        new UserResponse(userEntity.getId(), userEntity.getUsername());
+        new UserResponse(userEntity.getId(), userEntity.getUsername(),userEntity.getKilo(),userEntity.getAddress(),userEntity.getTotalSteps());
     return response;
   }
 
@@ -64,19 +63,20 @@ public class UserServiceImpl implements UserService {
     user.setId(user.getId());
     user.setPassword(bCryptPasswordEncoder.encode(request.getPassword()));
     user = userRepository.save(user);
-    UserResponse response = new UserResponse(user.getId(), user.getUsername());
+    UserResponse response = new UserResponse(user.getId(), user.getUsername(),user.getKilo(),user.getAddress(),user.getTotalSteps());
 
     return response;
   }
 
-  @Override
   public UserResponse getProfile() {
     UserEntity user = getAuthenticatedUser();
 
     // Build the UserResponse with filtered transactions
-    UserResponse response = new UserResponse(user.getId(), user.getUsername());
+    UserResponse response = new UserResponse(user.getId(), user.getUsername(),user.getKilo(),user.getAddress(),user.getTotalSteps());
     return response;
   }
+
+
 
   public UserEntity getUserProfile() {
     UserEntity user = getAuthenticatedUser();

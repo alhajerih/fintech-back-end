@@ -8,22 +8,6 @@ public interface UserService {
 
   UserResponse updateProfile(UpdateProfileRequest request);
 
-
-
-
-
-
   UserEntity getUserProfile();
-
-
-
-
-
-
-
-
-
-
-
 
 }
