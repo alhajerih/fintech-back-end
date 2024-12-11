@@ -1,7 +1,6 @@
 package com.springboot.bankbackend.service;
 
 import com.springboot.bankbackend.bo.UserResponse;
-import com.springboot.bankbackend.entity.TransactionEntity;
 import com.springboot.bankbackend.entity.UserEntity;
 import com.springboot.bankbackend.repository.UserRepository;
 import com.springboot.bankbackend.service.auth.CustomUserDetailsService;
@@ -32,14 +31,14 @@ public class AdminServiceImpl implements AdminService {
 
     // Map each UserEntity to UserProfileResponse and return as a list
     return users.stream()
-        .map(user -> new UserResponse(user.getId(), user.getUsername(), user.getEmail()))
+        .map(user -> new UserResponse(user.getId(), user.getUsername()))
         .collect(Collectors.toList());
   }
 
   @Override
   public UserResponse getUserById(Long id) {
     UserEntity user = userRepository.getById(id);
-    return new UserResponse(user.getId(), user.getUsername(), user.getEmail());
+    return new UserResponse(user.getId(), user.getUsername());
   }
 
   @Override
@@ -50,9 +49,5 @@ public class AdminServiceImpl implements AdminService {
     return user;
   }
 
-  @Override
-  public List<TransactionEntity> getAllDeposits() {
-    // todo implement get all deposits
-    return null;
-  }
+
 }

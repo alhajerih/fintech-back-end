@@ -1,6 +1,5 @@
 package com.springboot.bankbackend.bo;
 
-import com.springboot.bankbackend.entity.TransactionEntity;
 import java.util.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -15,23 +14,11 @@ public class CustomUserDetails implements UserDetails {
   private String profilePicture;
 
   private String role;
-  private List<TransactionEntity> transactions;
 
-  public List<TransactionEntity> getTransactions() {
-    return transactions;
-  }
 
-  public void setTransactions(List<TransactionEntity> transactions) {
-    if (this.transactions == null) {
-      this.transactions = new ArrayList<>();
-    }
-    this.transactions = transactions;
-  }
 
-  public void addTransaction(TransactionEntity transaction) {
-    this.transactions.add(transaction);
-  }
-  
+
+
   public String getProfilePicture() {
     return profilePicture;
   }

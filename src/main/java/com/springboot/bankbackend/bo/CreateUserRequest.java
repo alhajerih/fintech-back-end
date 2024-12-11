@@ -10,25 +10,13 @@ public class CreateUserRequest {
     @NotBlank(message = "Username must not be blank")
     private String username;
     @NotNull
-    @NotBlank(message = "Email must not be blank")
-    private String email;
-    @NotNull
     @NotBlank(message = "Password must not be blank")
     private String password;
-    private String profilePicture;
-    private String role;
 
-    public CreateUserRequest () {
+    public CreateUserRequest() {
         // Default constructor
     }
 
-    public String getProfilePicture() {
-        return profilePicture;
-    }
-
-    public void setProfilePicture(String profilePicture) {
-        this.profilePicture = profilePicture;
-    }
 
     public String getUsername() {
         return username;
@@ -44,21 +32,5 @@ public class CreateUserRequest {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 }
