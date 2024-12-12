@@ -1,46 +1,29 @@
 package com.springboot.bankbackend.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
 import javax.persistence.*;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 public class FriendChallengeEntity {
-
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private Long stepGoal;
-    private Integer points;
-    private Integer rank;
-    private Long steps;
-    private LocalTime startTime;
-    private  LocalTime endTime;
-    private LocalDate date;
 
+    @Column(name = "start_time")
+    private String startTime;
 
-    @ManyToMany
-    @JoinTable(
-            name = "challenge_opponents",
-            joinColumns = @JoinColumn(name = "challenge_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id")
-    )
-    @JsonManagedReference
-    private List<UserEntity> opponents = new ArrayList<>();
+    @Column(name = "end_time")
+    private String endTime;
 
-    @ManyToOne
-    @JsonBackReference
-    @JoinColumn(name = "history_id", nullable = false)
-    private HistoryEntity historyEntity;
+    @Column(name = "date")
+    private String date;
 
-    // Setter and Getter
+    @OneToMany(mappedBy = "friendChallenge", cascade = CascadeType.ALL)
+    private List<StepsEntity> steps;
+
+    // Getters and Setters
 
 
     public Long getId() {
@@ -59,67 +42,35 @@ public class FriendChallengeEntity {
         this.stepGoal = stepGoal;
     }
 
-    public Integer getPoints() {
-        return points;
-    }
-
-    public void setPoints(Integer points) {
-        this.points = points;
-    }
-
-    public Integer getRank() {
-        return rank;
-    }
-
-    public void setRank(Integer rank) {
-        this.rank = rank;
-    }
-
-    public Long getSteps() {
-        return steps;
-    }
-
-    public void setSteps(Long steps) {
-        this.steps = steps;
-    }
-
-    public LocalTime getStartTime() {
+    public String getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(LocalTime startTime) {
+    public void setStartTime(String startTime) {
         this.startTime = startTime;
     }
 
-    public LocalTime getEndTime() {
+    public String getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(LocalTime endTime) {
+    public void setEndTime(String endTime) {
         this.endTime = endTime;
     }
 
-    public LocalDate getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(LocalDate date) {
+    public void setDate(String date) {
         this.date = date;
     }
 
-    public List<UserEntity> getOpponents() {
-        return opponents;
+    public List<StepsEntity> getSteps() {
+        return steps;
     }
 
-    public void setOpponents(List<UserEntity> opponents) {
-        this.opponents = opponents;
-    }
-
-    public HistoryEntity getHistoryEntity() {
-        return historyEntity;
-    }
-
-    public void setHistoryEntity(HistoryEntity historyEntity) {
-        this.historyEntity = historyEntity;
+    public void setSteps(List<StepsEntity> steps) {
+        this.steps = steps;
     }
 }

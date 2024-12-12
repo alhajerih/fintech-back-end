@@ -4,18 +4,18 @@ public class UserResponse {
 
   private Long id;
   private String username;
-  private Double kilo;
-  private String address;
+  private Integer age;
+  private String city;
   private Long totalSteps;
   private Integer weight;
   private Integer height;
 private String role;
   //Constructor
-  public UserResponse(Long id, String username, Double kilo, String address, Long totalSteps,Integer weight,Integer height,String role) {
+  public UserResponse(Long id, String username, Integer age, String city, Long totalSteps,Integer weight,Integer height,String role) {
     this.id = id;
     this.username = username;
-    this.kilo = kilo;
-    this.address = address;
+    this.age = age;
+    this.city = city;
     this.totalSteps = totalSteps;
     this.weight = weight;
     this.height = height;
@@ -42,20 +42,20 @@ private String role;
     this.username = username;
   }
 
-  public Double getKilo() {
-    return kilo;
+  public Integer getAge() {
+    return age;
   }
 
-  public void setKilo(Double kilo) {
-    this.kilo = kilo;
+  public void setAge(Integer age) {
+    this.age = age;
   }
 
-  public String getAddress() {
-    return address;
+  public String getCity() {
+    return city;
   }
 
-  public void setAddress(String address) {
-    this.address = address;
+  public void setCity(String city) {
+    this.city = city;
   }
 
   public Long getTotalSteps() {

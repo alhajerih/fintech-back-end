@@ -4,26 +4,34 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 public class EventEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "date_time")
+    private String dateTime;
 
-    private LocalDateTime dateTime;
-    private String location;
-    private Integer basePoints;
-    private  Long steps;
-    private Integer rank;
-    @ManyToOne
-    @JsonBackReference
-    @JoinColumn(name = "history_id", nullable = false)
-    private HistoryEntity historyEntity;
+    private String locationName;
 
-    // Setter and Getter
+    private Integer fixedPoints;
+
+    @Column(name = "start_time")
+    private String startTime;
+
+    @Column(name = "end_time")
+    private String endTime;
+
+    @Column(name = "date")
+    private String date;
+
+    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL)
+    private List<StepsEntity> steps;
+
+    // Getters and Setters
 
 
     public Long getId() {
@@ -34,51 +42,60 @@ public class EventEntity {
         this.id = id;
     }
 
-    public LocalDateTime getDateTime() {
+    public String getDateTime() {
         return dateTime;
     }
 
-    public void setDateTime(LocalDateTime dateTime) {
+    public void setDateTime(String dateTime) {
         this.dateTime = dateTime;
     }
 
-    public String getLocation() {
-        return location;
+    public String getLocationName() {
+        return locationName;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
+    public void setLocationName(String locationName) {
+        this.locationName = locationName;
     }
 
-    public Integer getBasePoints() {
-        return basePoints;
+    public Integer getFixedPoints() {
+        return fixedPoints;
     }
 
-    public void setBasePoints(Integer basePoints) {
-        this.basePoints = basePoints;
+    public void setFixedPoints(Integer fixedPoints) {
+        this.fixedPoints = fixedPoints;
     }
 
-    public Long getSteps() {
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public List<StepsEntity> getSteps() {
         return steps;
     }
 
-    public void setSteps(Long steps) {
+    public void setSteps(List<StepsEntity> steps) {
         this.steps = steps;
     }
-
-    public Integer getRank() {
-        return rank;
-    }
-
-    public void setRank(Integer rank) {
-        this.rank = rank;
-    }
-
-    public HistoryEntity getHistoryEntity() {
-        return historyEntity;
-    }
-
-    public void setHistoryEntity(HistoryEntity historyEntity) {
-        this.historyEntity = historyEntity;
-    }
 }
+

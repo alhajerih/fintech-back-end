@@ -4,28 +4,23 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 public class DailyChallengeEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Integer points;
-    private Long steps;
-    private LocalDateTime dateTime;
 
-    @ManyToOne
-    @JsonBackReference
-    @JoinColumn(name = "history_id", nullable = false)
-    private HistoryEntity historyEntity;
+    private Integer fixedPoints;
 
+    @Column(name = "date_time")
+    private String dateTime;
 
+    @OneToMany(mappedBy = "dailyChallenge", cascade = CascadeType.ALL)
+    private List<StepsEntity> steps;
 
-
-
-
-    // Setter and Getter
+    // Getters and Setters
 
 
     public Long getId() {
@@ -36,35 +31,27 @@ public class DailyChallengeEntity {
         this.id = id;
     }
 
-    public Integer getPoints() {
-        return points;
+    public Integer getFixedPoints() {
+        return fixedPoints;
     }
 
-    public void setPoints(Integer points) {
-        this.points = points;
+    public void setFixedPoints(Integer fixedPoints) {
+        this.fixedPoints = fixedPoints;
     }
 
-    public Long getSteps() {
-        return steps;
-    }
-
-    public void setSteps(Long steps) {
-        this.steps = steps;
-    }
-
-    public LocalDateTime getDateTime() {
+    public String getDateTime() {
         return dateTime;
     }
 
-    public void setDateTime(LocalDateTime dateTime) {
+    public void setDateTime(String dateTime) {
         this.dateTime = dateTime;
     }
 
-    public HistoryEntity getHistoryEntity() {
-        return historyEntity;
+    public List<StepsEntity> getSteps() {
+        return steps;
     }
 
-    public void setHistoryEntity(HistoryEntity historyEntity) {
-        this.historyEntity = historyEntity;
+    public void setSteps(List<StepsEntity> steps) {
+        this.steps = steps;
     }
 }

@@ -13,6 +13,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 @Service
@@ -50,27 +51,20 @@ public class UserServiceImpl implements UserService {
     userEntity.setUsername(request.getUsername());
     userEntity.setPassword(bCryptPasswordEncoder.encode(request.getPassword()));
 userEntity.setTotalSteps(request.getTotalSteps());
-userEntity.setAddress(request.getAddress());
-userEntity.setKilo(request.getKilo());
+userEntity.setCity(request.getCity());
+userEntity.setAge(request.getAge());
 userEntity.setPhoneNumber(request.getPhoneNumber());
 userEntity.setHeight(request.getHeight());
 userEntity.setWeight(request.getWeight());
 userEntity.setRole(Roles.user);
 
 
-    // Initialize and link a new History to the user
-    HistoryEntity history = new HistoryEntity();
-    history.setEventEntity(new ArrayList<>());
-    history.setFriendChallengeEntity(new ArrayList<>());
-    history.setDailyChallengeEntity(new ArrayList<>());
-    //set the history to the user
-    userEntity.setHistory(history);
 
     userEntity = userRepository.save(userEntity);
 
     UserResponse response =
-        new UserResponse(userEntity.getId(), userEntity.getUsername(),userEntity.getKilo(),
-                userEntity.getAddress(),userEntity.getTotalSteps(),
+        new UserResponse(userEntity.getId(), userEntity.getUsername(),userEntity.getAge(),
+                userEntity.getCity(),userEntity.getTotalSteps(),
                 userEntity.getWeight(),userEntity.getHeight(),userEntity.getRole().toString()
         );
     return response;
@@ -82,8 +76,13 @@ userEntity.setRole(Roles.user);
     user.setUsername(request.getUsername());
     user.setId(user.getId());
     user.setPassword(bCryptPasswordEncoder.encode(request.getPassword()));
+    user.setAge(request.getAge());
+    user.setHeight(request.getHeight());
+    user.setWeight(request.getWeight());
+    user.setCity(request.getCity());
+    user.setPhoneNumber(request.getPhoneNumber());
     user = userRepository.save(user);
-    UserResponse response = new UserResponse(user.getId(), user.getUsername(),user.getKilo(),user.getAddress(),
+    UserResponse response = new UserResponse(user.getId(), user.getUsername(),user.getAge(),user.getCity(),
             user.getTotalSteps(),user.getWeight(),user.getHeight(),user.getRole().toString());
 
     return response;
@@ -93,7 +92,7 @@ userEntity.setRole(Roles.user);
     UserEntity user = getAuthenticatedUser();
 
     // Build the UserResponse with filtered transactions
-    UserResponse response = new UserResponse(user.getId(), user.getUsername(),user.getKilo(),user.getAddress(),
+    UserResponse response = new UserResponse(user.getId(), user.getUsername(),user.getAge(),user.getCity(),
             user.getTotalSteps(),user.getWeight(),user.getHeight(),user.getRole().toString());
     return response;
   }
@@ -106,10 +105,18 @@ userEntity.setRole(Roles.user);
     return user;
   }
 
+    @Override
+    public List<UserEntity> getAllUsers() {
+        return List.of();
+    }
+
+    @Override
+    public void deleteUser(Long id) {
+
+    }
 
 
-
-  private UserEntity getAuthenticatedUser() {
+    private UserEntity getAuthenticatedUser() {
     String username = SecurityContextHolder.getContext().getAuthentication().getName();
     return userRepository
         .findByUsername(username)
