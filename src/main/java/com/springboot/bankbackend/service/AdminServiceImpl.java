@@ -31,14 +31,15 @@ public class AdminServiceImpl implements AdminService {
 
     // Map each UserEntity to UserProfileResponse and return as a list
     return users.stream()
-        .map(user -> new UserResponse(user.getId(), user.getUsername()))
+        .map(user -> new UserResponse(user.getId(), user.getUsername(),user.getKilo(),user.getAddress(),
+                user.getTotalSteps(),user.getWeight(),user.getHeight()))
         .collect(Collectors.toList());
   }
 
   @Override
   public UserResponse getUserById(Long id) {
     UserEntity user = userRepository.getById(id);
-    return new UserResponse(user.getId(), user.getUsername());
+    return new UserResponse(user.getId(), user.getUsername(),user.getKilo(),user.getAddress(),user.getTotalSteps(),user.getWeight(),user.getHeight());
   }
 
   @Override

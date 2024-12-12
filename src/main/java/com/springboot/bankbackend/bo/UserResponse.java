@@ -3,17 +3,26 @@ package com.springboot.bankbackend.bo;
 public class UserResponse {
 
   private Long id;
-
   private String username;
+  private Double kilo;
+  private String address;
+  private Long totalSteps;
+  private Integer weight;
+  private Integer height;
 
-
-  public UserResponse(
-      Long id,
-      String username) {
+  //Constructor
+  public UserResponse(Long id, String username, Double kilo, String address, Long totalSteps,Integer weight,Integer height) {
     this.id = id;
     this.username = username;
-
+    this.kilo = kilo;
+    this.address = address;
+    this.totalSteps = totalSteps;
+    this.weight = weight;
+    this.height = height;
   }
+
+
+  // Setter and Getter
 
 
   public Long getId() {
@@ -30,5 +39,45 @@ public class UserResponse {
 
   public void setUsername(String username) {
     this.username = username;
+  }
+
+  public Double getKilo() {
+    return kilo;
+  }
+
+  public void setKilo(Double kilo) {
+    this.kilo = kilo;
+  }
+
+  public String getAddress() {
+    return address;
+  }
+
+  public void setAddress(String address) {
+    this.address = address;
+  }
+
+  public Long getTotalSteps() {
+    return totalSteps;
+  }
+
+  public void setTotalSteps(Long totalSteps) {
+    this.totalSteps = totalSteps;
+  }
+
+  public Integer getWeight() {
+    return weight;
+  }
+
+  public void setWeight(Integer weight) {
+    this.weight = weight;
+  }
+
+  public Integer getHeight() {
+    return height;
+  }
+
+  public void setHeight(Integer height) {
+    this.height = height;
   }
 }

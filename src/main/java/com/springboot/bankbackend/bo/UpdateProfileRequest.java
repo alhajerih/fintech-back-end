@@ -1,8 +1,8 @@
 package com.springboot.bankbackend.bo;
 
 public class UpdateProfileRequest {
+    private Long id;
     private String username;
-    private String email;
     private String phoneNumber;
     private String address;
     private String password;
@@ -22,12 +22,6 @@ public class UpdateProfileRequest {
     public void setUsername(String username) {
         this.username = username;
     }
-    public String getEmail() {
-        return email;
-    }
-    public void setEmail(String email) {
-        this.email = email;
-    }
     public String getPhoneNumber() {
         return phoneNumber;
     }
@@ -45,5 +39,13 @@ public class UpdateProfileRequest {
     }
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

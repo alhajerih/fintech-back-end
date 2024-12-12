@@ -11,6 +11,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -18,23 +20,22 @@ public class UserServiceImpl implements UserService {
   private final BCryptPasswordEncoder bCryptPasswordEncoder;
   private final CustomUserDetailsService userDetailsService;
 
-  private final OpenAIService openAIService;
+//  private final OpenAIService openAIService;
 
   public UserServiceImpl(
       UserRepository userRepository,
       BCryptPasswordEncoder bCryptPasswordEncoder,
-      CustomUserDetailsService userDetailsService,
-      OpenAIService openAIService) {
+      CustomUserDetailsService userDetailsService
+      ) {
     this.userRepository = userRepository;
     this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     this.userDetailsService = userDetailsService;
-    this.openAIService = openAIService;
   }
 
 
 
 
-
+// create new user
   @Override
   public UserResponse createUser(CreateUserRequest request) {
 
@@ -44,16 +45,25 @@ public class UserServiceImpl implements UserService {
     if (userRepository.existsByUsernameIgnoreCase(request.getUsername())) {
       throw new RuntimeException("Username already exists");
     }
-
+// Create a new UserEntity
     userEntity.setUsername(request.getUsername());
     userEntity.setPassword(bCryptPasswordEncoder.encode(request.getPassword()));
 
-    // todo put a real profile picture
+    // Initialize and link a new History to the user
+    HistoryEntity history = new HistoryEntity();
+    history.setEventEntity(new ArrayList<>());
+    history.setFriendChallengeEntity(new ArrayList<>());
+    history.setDailyChallengeEntity(new ArrayList<>());
+    //set the history to the user
+    userEntity.setHistory(history);
 
     userEntity = userRepository.save(userEntity);
 
     UserResponse response =
-        new UserResponse(userEntity.getId(), userEntity.getUsername());
+        new UserResponse(userEntity.getId(), userEntity.getUsername(),userEntity.getKilo(),
+                userEntity.getAddress(),userEntity.getTotalSteps(),
+                userEntity.getWeight(),userEntity.getHeight()
+        );
     return response;
   }
 
@@ -64,19 +74,22 @@ public class UserServiceImpl implements UserService {
     user.setId(user.getId());
     user.setPassword(bCryptPasswordEncoder.encode(request.getPassword()));
     user = userRepository.save(user);
-    UserResponse response = new UserResponse(user.getId(), user.getUsername());
+    UserResponse response = new UserResponse(user.getId(), user.getUsername(),user.getKilo(),user.getAddress(),
+            user.getTotalSteps(),user.getWeight(),user.getHeight());
 
     return response;
   }
 
-  @Override
   public UserResponse getProfile() {
     UserEntity user = getAuthenticatedUser();
 
     // Build the UserResponse with filtered transactions
-    UserResponse response = new UserResponse(user.getId(), user.getUsername());
+    UserResponse response = new UserResponse(user.getId(), user.getUsername(),user.getKilo(),user.getAddress(),
+            user.getTotalSteps(),user.getWeight(),user.getHeight());
     return response;
   }
+
+
 
   public UserEntity getUserProfile() {
     UserEntity user = getAuthenticatedUser();
