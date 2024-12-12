@@ -9,9 +9,9 @@ public class UserResponse {
   private Long totalSteps;
   private Integer weight;
   private Integer height;
-
+private String role;
   //Constructor
-  public UserResponse(Long id, String username, Double kilo, String address, Long totalSteps,Integer weight,Integer height) {
+  public UserResponse(Long id, String username, Double kilo, String address, Long totalSteps,Integer weight,Integer height,String role) {
     this.id = id;
     this.username = username;
     this.kilo = kilo;
@@ -19,6 +19,7 @@ public class UserResponse {
     this.totalSteps = totalSteps;
     this.weight = weight;
     this.height = height;
+    this.role=role;
   }
 
 
@@ -79,5 +80,13 @@ public class UserResponse {
 
   public void setHeight(Integer height) {
     this.height = height;
+  }
+
+  public String getRole() {
+    return role;
+  }
+
+  public void setRole(String role) {
+    this.role = role;
   }
 }

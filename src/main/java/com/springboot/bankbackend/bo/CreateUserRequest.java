@@ -14,11 +14,12 @@ public class CreateUserRequest {
     private String password;
 
     private  Double kilo;
+
     private  String address;
     private  String phoneNumber;
     private Integer weight;
     private Integer height;
-
+    private Long totalSteps;
 
 
 
@@ -83,5 +84,13 @@ public class CreateUserRequest {
 
     public void setHeight(Integer height) {
         this.height = height;
+    }
+
+    public Long getTotalSteps() {
+        return totalSteps;
+    }
+
+    public void setTotalSteps(Long totalSteps) {
+        this.totalSteps = totalSteps;
     }
 }

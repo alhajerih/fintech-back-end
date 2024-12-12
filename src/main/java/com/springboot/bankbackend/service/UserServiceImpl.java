@@ -6,6 +6,7 @@ import com.springboot.bankbackend.entity.*;
 import com.springboot.bankbackend.repository.*;
 import com.springboot.bankbackend.service.auth.CustomUserDetailsService;
 
+import com.springboot.bankbackend.utils.Roles;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -48,6 +49,14 @@ public class UserServiceImpl implements UserService {
 // Create a new UserEntity
     userEntity.setUsername(request.getUsername());
     userEntity.setPassword(bCryptPasswordEncoder.encode(request.getPassword()));
+userEntity.setTotalSteps(request.getTotalSteps());
+userEntity.setAddress(request.getAddress());
+userEntity.setKilo(request.getKilo());
+userEntity.setPhoneNumber(request.getPhoneNumber());
+userEntity.setHeight(request.getHeight());
+userEntity.setWeight(request.getWeight());
+userEntity.setRole(Roles.user);
+
 
     // Initialize and link a new History to the user
     HistoryEntity history = new HistoryEntity();
@@ -62,7 +71,7 @@ public class UserServiceImpl implements UserService {
     UserResponse response =
         new UserResponse(userEntity.getId(), userEntity.getUsername(),userEntity.getKilo(),
                 userEntity.getAddress(),userEntity.getTotalSteps(),
-                userEntity.getWeight(),userEntity.getHeight()
+                userEntity.getWeight(),userEntity.getHeight(),userEntity.getRole().toString()
         );
     return response;
   }
@@ -75,7 +84,7 @@ public class UserServiceImpl implements UserService {
     user.setPassword(bCryptPasswordEncoder.encode(request.getPassword()));
     user = userRepository.save(user);
     UserResponse response = new UserResponse(user.getId(), user.getUsername(),user.getKilo(),user.getAddress(),
-            user.getTotalSteps(),user.getWeight(),user.getHeight());
+            user.getTotalSteps(),user.getWeight(),user.getHeight(),user.getRole().toString());
 
     return response;
   }
@@ -85,7 +94,7 @@ public class UserServiceImpl implements UserService {
 
     // Build the UserResponse with filtered transactions
     UserResponse response = new UserResponse(user.getId(), user.getUsername(),user.getKilo(),user.getAddress(),
-            user.getTotalSteps(),user.getWeight(),user.getHeight());
+            user.getTotalSteps(),user.getWeight(),user.getHeight(),user.getRole().toString());
     return response;
   }
 
