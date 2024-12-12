@@ -6,11 +6,7 @@ import javax.validation.constraints.NotBlank;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CreateUserRequest {
-    @NotNull
-    @NotBlank(message = "Username must not be blank")
     private String username;
-    @NotNull
-    @NotBlank(message = "Password must not be blank")
     private String password;
 
     private  Integer age;

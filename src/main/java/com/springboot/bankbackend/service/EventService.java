@@ -1,10 +1,12 @@
 package com.springboot.bankbackend.service;
 
+import com.springboot.bankbackend.bo.EventRequestBO;
+import com.springboot.bankbackend.bo.EventResponseBO;
 import com.springboot.bankbackend.entity.EventEntity;
 
 import java.util.List;
 
 public interface EventService {
-    EventEntity createEvent(EventEntity event);
-    List<EventEntity> getAllEvents();
+    List<EventResponseBO> getAllEvents();
+    EventResponseBO createEvent(EventRequestBO eventRequestBO);
 }

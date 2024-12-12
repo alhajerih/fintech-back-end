@@ -12,6 +12,8 @@ public interface UserService {
 
   UserEntity getUserProfile();
 
-  List<UserEntity> getAllUsers();
+  List<UserResponse> getAllUsers();
   void deleteUser(Long id);
+
+  UserResponse getUserById(Long id);
 }

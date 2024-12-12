@@ -56,6 +56,12 @@ public class UserController {
   }
 
 
+  //Get user by ID for adding friends
+  @GetMapping("/{id}")
+  public ResponseEntity<UserResponse> getUserById(@PathVariable Long id) {
+
+    return ResponseEntity.ok(userService.getUserById(id));
+  }
 
 
 

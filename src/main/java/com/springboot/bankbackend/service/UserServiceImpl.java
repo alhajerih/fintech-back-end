@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -105,15 +106,30 @@ userEntity.setRole(Roles.user);
     return user;
   }
 
-    @Override
-    public List<UserEntity> getAllUsers() {
-        return List.of();
-    }
 
-    @Override
-    public void deleteUser(Long id) {
+  // get all users
+  @Override
+  public List<UserResponse> getAllUsers() {
+    return userRepository.findAll()
+            .stream()
+            .map(user -> new UserResponse(
+                    user.getId(),
+                    user.getUsername(),
+                    user.getAge(),
+                    user.getCity(),
+                    user.getTotalSteps(),
+                    user.getWeight(),
+                    user.getHeight(),
+                    user.getRole().toString()
+            ))
+            .collect(Collectors.toList());
+  }
 
-    }
+
+  @Override
+  public void deleteUser(Long id) {
+    userRepository.deleteById(id);
+  }
 
 
     private UserEntity getAuthenticatedUser() {
@@ -123,6 +139,21 @@ userEntity.setRole(Roles.user);
         .orElseThrow(() -> new UsernameNotFoundException("User not found"));
   }
 
+  @Override
+  public UserResponse getUserById(Long id) {
+    return userRepository.findById(id)
+            .map(user -> new UserResponse(
+                    user.getId(),
+                    user.getUsername(),
+                    user.getAge(),
+                    user.getCity(),
+                    user.getTotalSteps(),
+                    user.getWeight(),
+                    user.getHeight(),
+                    user.getRole().toString()
+            ))
+            .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
 
+  }
 
 }
