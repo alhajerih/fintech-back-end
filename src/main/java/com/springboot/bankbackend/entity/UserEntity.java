@@ -18,18 +18,16 @@ public class UserEntity {
 
     @Column(name = "password", nullable = false)
     private String password;
-
-    private Double kilo;
-    private String address;
+    private String city;
     private String phoneNumber;
-    private  Long totalSteps;
+    private Long totalSteps;
     private Integer weight;
     private Integer height;
+    private Integer age;
+    private Long points;
 
-    @OneToOne(cascade = CascadeType.ALL,orphanRemoval = true)
-    @JsonManagedReference
-    private HistoryEntity historyEntity;
-
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<StepsEntity> steps;
 
     @ManyToMany
     @JoinTable(
@@ -37,14 +35,10 @@ public class UserEntity {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "friend_id")
     )
-    @JsonManagedReference
-    private List<UserEntity> friends = new ArrayList<>();
-
-
+    private List<UserEntity> friends;
     @Enumerated(EnumType.STRING)
     private Roles role;
-
-// Setter and Getter
+    // Getters and Setters
 
 
     public Long getId() {
@@ -71,20 +65,12 @@ public class UserEntity {
         this.password = password;
     }
 
-    public Double getKilo() {
-        return kilo;
+    public String getCity() {
+        return city;
     }
 
-    public void setKilo(Double kilo) {
-        this.kilo = kilo;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
+    public void setCity(String city) {
+        this.city = city;
     }
 
     public String getPhoneNumber() {
@@ -119,12 +105,28 @@ public class UserEntity {
         this.height = height;
     }
 
-    public HistoryEntity getHistory() {
-        return historyEntity;
+    public Integer getAge() {
+        return age;
     }
 
-    public void setHistory(HistoryEntity historyEntity) {
-        this.historyEntity = historyEntity;
+    public void setAge(Integer age) {
+        this.age = age;
+    }
+
+    public Long getPoints() {
+        return points;
+    }
+
+    public void setPoints(Long points) {
+        this.points = points;
+    }
+
+    public List<StepsEntity> getSteps() {
+        return steps;
+    }
+
+    public void setSteps(List<StepsEntity> steps) {
+        this.steps = steps;
     }
 
     public List<UserEntity> getFriends() {

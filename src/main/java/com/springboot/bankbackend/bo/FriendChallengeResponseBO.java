@@ -1,27 +1,19 @@
-package com.springboot.bankbackend.entity;
+package com.springboot.bankbackend.bo;
 
-import javax.persistence.*;
-import java.util.List;
-
-@Entity
-public class FriendChallengeEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class FriendChallengeResponseBO {
     private Long id;
-
     private Long stepGoal;
+    private String startTime; // In string format (converted from LocalTime)
+    private String endTime;   // In string format (converted from LocalTime)
+    private String date;      // In string format (converted from LocalDate)
 
-    @Column(name = "start_time")
-    private String startTime;
-
-    @Column(name = "end_time")
-    private String endTime;
-
-    @Column(name = "date")
-    private String date;
-
-    @OneToMany(mappedBy = "friendChallenge", cascade = CascadeType.ALL)
-    private List<StepsEntity> steps;
+    public FriendChallengeResponseBO(Long id, Long stepGoal, String startTime, String endTime, String date) {
+        this.id = id;
+        this.stepGoal = stepGoal;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.date = date;
+    }
 
     // Getters and Setters
 
@@ -64,13 +56,5 @@ public class FriendChallengeEntity {
 
     public void setDate(String date) {
         this.date = date;
-    }
-
-    public List<StepsEntity> getSteps() {
-        return steps;
-    }
-
-    public void setSteps(List<StepsEntity> steps) {
-        this.steps = steps;
     }
 }

@@ -1,46 +1,15 @@
-package com.springboot.bankbackend.entity;
+package com.springboot.bankbackend.bo;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-
-import javax.persistence.*;
-import java.time.LocalDateTime;
-import java.util.List;
-
-@Entity
-public class EventEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(name = "date_time")
-    private String dateTime;
-
+public class EventRequestBO {
+    private String dateTime;     // In string format (converted from LocalDateTime)
     private String locationName;
-
     private Integer fixedPoints;
-
-    @Column(name = "start_time")
-    private String startTime;
-
-    @Column(name = "end_time")
-    private String endTime;
-
-    @Column(name = "date")
-    private String date;
-
-    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL)
-    private List<StepsEntity> steps;
+    private String startTime;    // In string format (converted from LocalTime)
+    private String endTime;      // In string format (converted from LocalTime)
+    private String date;         // In string format (converted from LocalDate)
 
     // Getters and Setters
 
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getDateTime() {
         return dateTime;
@@ -88,14 +57,6 @@ public class EventEntity {
 
     public void setDate(String date) {
         this.date = date;
-    }
-
-    public List<StepsEntity> getSteps() {
-        return steps;
-    }
-
-    public void setSteps(List<StepsEntity> steps) {
-        this.steps = steps;
     }
 }
 

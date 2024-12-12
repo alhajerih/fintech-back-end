@@ -4,8 +4,11 @@ public class UpdateProfileRequest {
     private Long id;
     private String username;
     private String phoneNumber;
-    private String address;
+    private String city;
     private String password;
+    private Integer weight;
+    private Integer height;
+    private Integer age;
     private String role;
 
     public String getRole() {
@@ -28,12 +31,15 @@ public class UpdateProfileRequest {
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
-    public String getAddress() {
-        return address;
+
+    public String getCity() {
+        return city;
     }
-    public void setAddress(String address) {
-        this.address = address;
+
+    public void setCity(String city) {
+        this.city = city;
     }
+
     public String getPassword() {
         return password;
     }
@@ -48,4 +54,31 @@ public class UpdateProfileRequest {
     public void setId(Long id) {
         this.id = id;
     }
+
+    public Integer getWeight() {
+        return weight;
+    }
+
+    public void setWeight(Integer weight) {
+        this.weight = weight;
+    }
+
+    public Integer getHeight() {
+        return height;
+    }
+
+    public void setHeight(Integer height) {
+        this.height = height;
+    }
+
+
+    public Integer getAge() {
+        return age;
+    }
+
+    public void setAge(Integer age) {
+        this.age = age;
+    }
+
+
 }
