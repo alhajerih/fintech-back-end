@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/v1/auth/")
+@RequestMapping("/api/v1/auth")
 public class AuthController {
 
   @Autowired private UserService userService;
@@ -25,7 +25,7 @@ public class AuthController {
   @Autowired private AuthService authService;
 
   @PostMapping("/signup")
-  public ResponseEntity<UserResponse> createUser( @RequestBody CreateUserRequest request) {
+  public ResponseEntity<UserResponse> createUser(@Valid @RequestBody CreateUserRequest request) {
     try {
       UserResponse response = userService.createUser(request);
       // Check if the response is not null (indicating a successful creation)

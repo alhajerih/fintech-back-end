@@ -16,6 +16,12 @@ public class CreateUserRequest {
     private  Double kilo;
     private  String address;
     private  String phoneNumber;
+    private Integer weight;
+    private Integer height;
+
+
+
+
     public CreateUserRequest() {
         // Default constructor
     }
@@ -61,5 +67,21 @@ public class CreateUserRequest {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public Integer getWeight() {
+        return weight;
+    }
+
+    public void setWeight(Integer weight) {
+        this.weight = weight;
+    }
+
+    public Integer getHeight() {
+        return height;
+    }
+
+    public void setHeight(Integer height) {
+        this.height = height;
     }
 }

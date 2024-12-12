@@ -7,15 +7,18 @@ public class UserResponse {
   private Double kilo;
   private String address;
   private Long totalSteps;
-
+  private Integer weight;
+  private Integer height;
 
   //Constructor
-  public UserResponse(Long id, String username, Double kilo, String address, Long totalSteps) {
+  public UserResponse(Long id, String username, Double kilo, String address, Long totalSteps,Integer weight,Integer height) {
     this.id = id;
     this.username = username;
     this.kilo = kilo;
     this.address = address;
     this.totalSteps = totalSteps;
+    this.weight = weight;
+    this.height = height;
   }
 
 
@@ -62,6 +65,19 @@ public class UserResponse {
     this.totalSteps = totalSteps;
   }
 
+  public Integer getWeight() {
+    return weight;
+  }
 
+  public void setWeight(Integer weight) {
+    this.weight = weight;
+  }
 
+  public Integer getHeight() {
+    return height;
+  }
+
+  public void setHeight(Integer height) {
+    this.height = height;
+  }
 }
