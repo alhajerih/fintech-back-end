@@ -10,30 +10,8 @@ public class CustomUserDetails implements UserDetails {
   private Long id;
   private String userName;
   private String password;
-  private String email;
-  private String profilePicture;
 
   private String role;
-
-
-
-
-
-  public String getProfilePicture() {
-    return profilePicture;
-  }
-
-  public void setProfilePicture(String profilePicture) {
-    this.profilePicture = profilePicture;
-  }
-
-  public String getEmail() {
-    return email;
-  }
-
-  public void setEmail(String email) {
-    this.email = email;
-  }
 
   public Long getId() {
     return id;
