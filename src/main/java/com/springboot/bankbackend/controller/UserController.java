@@ -6,6 +6,7 @@ import com.springboot.bankbackend.service.UserService;
 import com.springboot.bankbackend.service.auth.CustomUserDetailsService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -31,8 +32,8 @@ public class UserController {
 
   // Get profile for logged-in user
   @GetMapping("/me")
-  public ResponseEntity<UserEntity> getCurrentUserProfile() {
-    UserEntity user = userService.getUserProfile();
+  public ResponseEntity<UserResponse> getCurrentUserProfile() {
+    UserResponse user = userService.getUserProfile();
     if(user != null) {
       return ResponseEntity.ok(user);
     } else {
@@ -64,8 +65,83 @@ public class UserController {
   }
 
 
+  @PostMapping("/participate/event/{eventId}")
+  public ResponseEntity<Void> participateInEvent( @PathVariable Long eventId) {
+    Long userId = getLoggedInUserId();
+    userService.participateInEvent(userId, eventId);
+    return ResponseEntity.ok().build();
+  }
+
+  @PostMapping("/participate/daily/{dailyChallengeId}")
+  public ResponseEntity<Void> participateInDailyChallenge( @PathVariable Long dailyChallengeId) {
+    Long userId = getLoggedInUserId();
+    userService.participateInDailyChallenge(userId, dailyChallengeId);
+    return ResponseEntity.ok().build();
+  }
+
+  @PostMapping("/participate/friend/{challengeId}")
+  public ResponseEntity<Void> participateInFriendChallenge(
+
+          @PathVariable Long challengeId,
+          @RequestBody List<Long> friendIds) {
+    Long userId = getLoggedInUserId();
+    userService.participateInFriendChallenge(userId, challengeId, friendIds);
+    return ResponseEntity.ok().build();
+  }
+
+
+  // Utility method to get the logged-in user's ID
+  private Long getLoggedInUserId() {
+    // Assuming Spring Security is used with JWT
+    String username = SecurityContextHolder.getContext().getAuthentication().getName();
+    UserEntity user = userService.findByUsername(username);
+    return user.getId();
+  }
+
+
+  @PostMapping("/friends/{friendId}")
+  public ResponseEntity<Void> addFriend(@PathVariable Long friendId) {
+    Long userId = getLoggedInUserId(); // Get the logged-in user's ID
+    userService.addFriend(userId, friendId);
+    return ResponseEntity.ok().build();
+  }
+
+  @GetMapping("/friends")
+  public ResponseEntity<List<UserResponse>> getAllFriends() {
+    Long userId = getLoggedInUserId(); // Get the logged-in user's ID
+    List<UserResponse> friends = userService.getAllFriends(userId);
+    return ResponseEntity.ok(friends);
+  }
 
 
 
+  //Rest API`s for update the steps
+
+  @PostMapping("/steps/daily/{dailyChallengeId}")
+  public ResponseEntity<Void> updateStepsForDailyChallenge(
+          @PathVariable Long dailyChallengeId,
+          @RequestBody UpdateStepsRequest request) {
+    Long userId = getLoggedInUserId(); // Get the logged-in user's ID
+    userService.updateStepsForDailyChallenge(userId, dailyChallengeId, request.getSteps());
+    return ResponseEntity.ok().build();
+  }
+
+  @PostMapping("/steps/friend/{friendChallengeId}")
+  public ResponseEntity<Void> updateStepsForFriendChallenge(
+          @PathVariable Long friendChallengeId,
+          @RequestBody UpdateStepsRequest request) {
+    Long userId = getLoggedInUserId(); // Get the logged-in user's ID
+    userService.updateStepsForFriendChallenge(userId, friendChallengeId, request.getSteps());
+    return ResponseEntity.ok().build();
+  }
+
+  @PostMapping("/steps/event/{eventId}")
+  public ResponseEntity<Void> updateStepsForEvent(
+          @PathVariable Long eventId,
+          @RequestBody UpdateStepsRequest request) {
+    Long userId = getLoggedInUserId(); // Get the logged-in user's ID
+    userService.updateStepsForEvent(userId, eventId, request.getSteps());
+    return ResponseEntity.ok().build();
+  }
 
 }
