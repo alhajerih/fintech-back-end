@@ -113,4 +113,35 @@ public class UserController {
     return ResponseEntity.ok(friends);
   }
 
+
+
+  //Rest API`s for update the steps
+
+  @PostMapping("/steps/daily/{dailyChallengeId}")
+  public ResponseEntity<Void> updateStepsForDailyChallenge(
+          @PathVariable Long dailyChallengeId,
+          @RequestBody UpdateStepsRequest request) {
+    Long userId = getLoggedInUserId(); // Get the logged-in user's ID
+    userService.updateStepsForDailyChallenge(userId, dailyChallengeId, request.getSteps());
+    return ResponseEntity.ok().build();
+  }
+
+  @PostMapping("/steps/friend/{friendChallengeId}")
+  public ResponseEntity<Void> updateStepsForFriendChallenge(
+          @PathVariable Long friendChallengeId,
+          @RequestBody UpdateStepsRequest request) {
+    Long userId = getLoggedInUserId(); // Get the logged-in user's ID
+    userService.updateStepsForFriendChallenge(userId, friendChallengeId, request.getSteps());
+    return ResponseEntity.ok().build();
+  }
+
+  @PostMapping("/steps/event/{eventId}")
+  public ResponseEntity<Void> updateStepsForEvent(
+          @PathVariable Long eventId,
+          @RequestBody UpdateStepsRequest request) {
+    Long userId = getLoggedInUserId(); // Get the logged-in user's ID
+    userService.updateStepsForEvent(userId, eventId, request.getSteps());
+    return ResponseEntity.ok().build();
+  }
+
 }

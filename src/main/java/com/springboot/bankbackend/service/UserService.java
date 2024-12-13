@@ -23,4 +23,11 @@ public interface UserService {
 UserEntity findByUsername(String username);
   void addFriend(Long userId, Long friendId);
   List<UserResponse> getAllFriends(Long userId);
+
+  Long getTotalSteps(Long userId);
+
+  //Handling update the steps
+  void updateStepsForDailyChallenge(Long userId, Long dailyChallengeId, Long steps);
+  void updateStepsForFriendChallenge(Long userId, Long friendChallengeId, Long steps);
+  void updateStepsForEvent(Long userId, Long eventId, Long steps);
 }

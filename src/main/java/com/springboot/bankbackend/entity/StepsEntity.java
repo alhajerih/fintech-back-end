@@ -1,7 +1,11 @@
 package com.springboot.bankbackend.entity;
 
 import javax.persistence.*;
-
+@Table(name = "steps", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"user_id", "daily_challenge_id"}),
+        @UniqueConstraint(columnNames = {"user_id", "event_id"}),
+        @UniqueConstraint(columnNames = {"user_id", "friend_challenge_id"})
+})
 @Entity
 public class StepsEntity {
     @Id

@@ -269,6 +269,61 @@ userEntity.setRole(Roles.user);
   }
 
 
+  @Override
+  public void updateStepsForDailyChallenge(Long userId, Long dailyChallengeId, Long steps) {
+    List<StepsEntity> stepsEntities = stepsRepository.findByUserIdAndDailyChallengeId(userId, dailyChallengeId);
+
+    if (stepsEntities.isEmpty()) {
+      throw new RuntimeException("No participation found for this daily challenge");
+    }
+
+    // Log if duplicates exist
+    if (stepsEntities.size() > 1) {
+      System.out.println("Warning: Multiple records found for userId=" + userId + " and dailyChallengeId=" + dailyChallengeId);
+    }
+
+    // Update the first record (or handle duplicates as needed)
+    StepsEntity stepsEntity = stepsEntities.get(0);
+    stepsEntity.setSteps(stepsEntity.getSteps() + steps);
+    stepsRepository.save(stepsEntity);
+  }
+
+
+
+  @Override
+  public void updateStepsForFriendChallenge(Long userId, Long friendChallengeId, Long steps) {
+    List<StepsEntity> stepsEntities = stepsRepository.findByUserIdAndFriendChallengeId(userId, friendChallengeId);
+
+    if (stepsEntities.isEmpty()) {
+      throw new RuntimeException("No participation found for this friend challenge");
+    }
+
+    if (stepsEntities.size() > 1) {
+      System.out.println("Warning: Multiple records found for userId=" + userId + " and friendChallengeId=" + friendChallengeId);
+    }
+
+    StepsEntity stepsEntity = stepsEntities.get(0);
+    stepsEntity.setSteps(stepsEntity.getSteps() + steps);
+    stepsRepository.save(stepsEntity);
+  }
+
+
+  @Override
+  public void updateStepsForEvent(Long userId, Long eventId, Long steps) {
+    List<StepsEntity> stepsEntities = stepsRepository.findByUserIdAndEventId(userId, eventId);
+
+    if (stepsEntities.isEmpty()) {
+      throw new RuntimeException("No participation found for this event");
+    }
+
+    if (stepsEntities.size() > 1) {
+      System.out.println("Warning: Multiple records found for userId=" + userId + " and eventId=" + eventId);
+    }
+
+    StepsEntity stepsEntity = stepsEntities.get(0);
+    stepsEntity.setSteps(stepsEntity.getSteps() + steps);
+    stepsRepository.save(stepsEntity);
+  }
 
 
 }
