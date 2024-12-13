@@ -14,5 +14,6 @@ public interface ChallengeService {
     DailyChallengeResponseBO createDailyChallenge(DailyChallengeRequestBO dailyChallengeRequestBO);
     List<FriendChallengeResponseBO> getAllFriendChallenges();
     FriendChallengeResponseBO createFriendChallenge(FriendChallengeRequestBO friendChallengeRequestBO);
+
 }
 

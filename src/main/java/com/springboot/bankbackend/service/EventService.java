@@ -9,4 +9,5 @@ import java.util.List;
 public interface EventService {
     List<EventResponseBO> getAllEvents();
     EventResponseBO createEvent(EventRequestBO eventRequestBO);
+
 }

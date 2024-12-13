@@ -22,17 +22,24 @@ public class UserServiceImpl implements UserService {
   private final UserRepository userRepository;
   private final BCryptPasswordEncoder bCryptPasswordEncoder;
   private final CustomUserDetailsService userDetailsService;
-
+private final StepsRepository stepsRepository;
+private final FriendChallengeRepository friendChallengeRepository;
+private final EventRepository eventRepository;
+private final DailyChallengeRepository dailyChallengeRepository;
 //  private final OpenAIService openAIService;
 
   public UserServiceImpl(
-      UserRepository userRepository,
-      BCryptPasswordEncoder bCryptPasswordEncoder,
-      CustomUserDetailsService userDetailsService
-      ) {
+          UserRepository userRepository,
+          BCryptPasswordEncoder bCryptPasswordEncoder,
+          CustomUserDetailsService userDetailsService, StepsRepository stepsRepository, FriendChallengeRepository friendChallengeRepository, EventRepository eventRepository, DailyChallengeRepository dailyChallengeRepository
+  ) {
     this.userRepository = userRepository;
     this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     this.userDetailsService = userDetailsService;
+      this.stepsRepository = stepsRepository;
+      this.friendChallengeRepository = friendChallengeRepository;
+      this.eventRepository = eventRepository;
+      this.dailyChallengeRepository = dailyChallengeRepository;
   }
 
 
@@ -155,5 +162,113 @@ userEntity.setRole(Roles.user);
             .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
 
   }
+
+
+
+
+
+  @Override
+  public void participateInFriendChallenge(Long userId, Long challengeId, List<Long> friendIds) {
+    UserEntity user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+    FriendChallengeEntity challenge = friendChallengeRepository.findById(challengeId)
+            .orElseThrow(() -> new RuntimeException("Friend Challenge not found"));
+
+    List<UserEntity> friends = userRepository.findAllById(friendIds);
+    if (friends.isEmpty()) {
+      throw new RuntimeException("No friends found");
+    }
+
+    // Add the user and their friends to the challenge
+    friends.add(user);
+    for (UserEntity participant : friends) {
+      StepsEntity steps = new StepsEntity();
+      steps.setUser(participant);
+      steps.setFriendChallenge(challenge);
+      steps.setSteps(0L); // Initially 0 steps
+      stepsRepository.save(steps);
+    }
+  }
+
+
+  @Override
+  public void participateInEvent(Long userId,Long eventId){
+    UserEntity user = userRepository.findById(userId).orElseThrow(()-> new RuntimeException("User not found"));
+    EventEntity event = eventRepository.findById(eventId).orElseThrow(()-> new RuntimeException("Event not found"));
+
+    // Create a new StepsEntity for the user`s participation
+    StepsEntity steps = new StepsEntity();
+    steps.setUser(user);
+    steps.setEvent(event);
+    steps.setSteps(0L); // Initially 0 steps
+
+    // save event
+    stepsRepository.save(steps);
+
+  }
+  @Override
+  public UserEntity findByUsername(String username) {
+    return userRepository.findByUsername(username)
+            .orElseThrow(() -> new RuntimeException("User not found with username: " + username));
+  }
+
+
+  @Override
+  public void participateInDailyChallenge(Long userId, Long dailyChallengeId) {
+    // Fetch the user and daily challenge
+    UserEntity user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+    DailyChallengeEntity dailyChallenge = dailyChallengeRepository.findById(dailyChallengeId)
+            .orElseThrow(() -> new RuntimeException("Daily Challenge not found"));
+
+    // Create a new StepsEntity for participation
+    StepsEntity steps = new StepsEntity();
+    steps.setUser(user);
+    steps.setDailyChallenge(dailyChallenge);
+    steps.setSteps(0L); // Initial steps for participation
+
+    // Save the steps entry
+    stepsRepository.save(steps);
+  }
+
+  @Override
+  public void addFriend(Long userId, Long friendId) {
+    UserEntity user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+    UserEntity friend = userRepository.findById(friendId).orElseThrow(() -> new RuntimeException("Friend not found"));
+
+    if (user.getFriends().contains(friend)) {
+      throw new RuntimeException("Friend already added");
+    }
+
+    // Add the friend to the user's friend list
+    user.getFriends().add(friend);
+    friend.getFriends().add(user);
+
+    //save both user and his friends
+    userRepository.save(user);
+    userRepository.save(friend);
+
+  }
+
+  @Override
+  public List<UserResponse> getAllFriends(Long userId) {
+    UserEntity user = userRepository.findById(userId)
+            .orElseThrow(() -> new RuntimeException("User not found"));
+
+    // Map the user's friends to UserResponse
+    return user.getFriends().stream()
+            .map(friend -> new UserResponse(
+                    friend.getId(),
+                    friend.getUsername(),
+                    friend.getAge(),
+                    friend.getCity(),
+                    friend.getTotalSteps(),
+                    friend.getWeight(),
+                    friend.getHeight(),
+                    friend.getRole().toString() // Assuming getRole() returns an Enum
+            ))
+            .collect(Collectors.toList());
+  }
+
+
+
 
 }

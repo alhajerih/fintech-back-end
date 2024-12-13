@@ -3,7 +3,11 @@ package com.springboot.bankbackend.service;
 import com.springboot.bankbackend.bo.EventRequestBO;
 import com.springboot.bankbackend.bo.EventResponseBO;
 import com.springboot.bankbackend.entity.EventEntity;
+import com.springboot.bankbackend.entity.StepsEntity;
+import com.springboot.bankbackend.entity.UserEntity;
 import com.springboot.bankbackend.repository.EventRepository;
+import com.springboot.bankbackend.repository.StepsRepository;
+import com.springboot.bankbackend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +19,8 @@ public class EventServiceImpl implements EventService {
     @Autowired
     private EventRepository eventRepository;
 
+    private UserRepository userRepository;
+private StepsRepository stepsRepository;
     // Get all Events
     @Override
     public List<EventResponseBO> getAllEvents() {
@@ -52,5 +58,7 @@ public class EventServiceImpl implements EventService {
                 savedEvent.getDate()
         );
     }
+
+
 
 }

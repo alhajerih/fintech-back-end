@@ -6,8 +6,12 @@ import com.springboot.bankbackend.bo.FriendChallengeRequestBO;
 import com.springboot.bankbackend.bo.FriendChallengeResponseBO;
 import com.springboot.bankbackend.entity.DailyChallengeEntity;
 import com.springboot.bankbackend.entity.FriendChallengeEntity;
+import com.springboot.bankbackend.entity.StepsEntity;
+import com.springboot.bankbackend.entity.UserEntity;
 import com.springboot.bankbackend.repository.DailyChallengeRepository;
 import com.springboot.bankbackend.repository.FriendChallengeRepository;
+import com.springboot.bankbackend.repository.StepsRepository;
+import com.springboot.bankbackend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +24,12 @@ public class ChallengeServiceImpl implements ChallengeService {
     private DailyChallengeRepository dailyChallengeRepository;
     @Autowired
     private FriendChallengeRepository friendChallengeRepository;
+
+    @Autowired
+    private StepsRepository stepsRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Override
     public List<DailyChallengeResponseBO> getAllDailyChallenges() {
@@ -68,6 +78,12 @@ public class ChallengeServiceImpl implements ChallengeService {
                 savedChallenge.getDate()
         );
     }
+
+
+
+
+
+
 
 }
 
