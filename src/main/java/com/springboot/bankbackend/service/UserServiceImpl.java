@@ -107,11 +107,26 @@ userEntity.setRole(Roles.user);
 
 
 
-  public UserEntity getUserProfile() {
+  public UserResponse getUserProfile() {
+    // Fetch the authenticated user
     UserEntity user = getAuthenticatedUser();
 
-    return user;
+    // Calculate total steps dynamically
+    Long totalSteps = stepsRepository.findTotalStepsByUserId(user.getId());
+
+    // Return a UserResponseBO that includes the total steps
+    return new UserResponse(
+            user.getId(),
+            user.getUsername(),
+            user.getAge(),
+            user.getCity(),
+            totalSteps != null ? totalSteps : 0L, // Handle null case
+            user.getWeight(),
+            user.getHeight(),
+            user.getRole().toString()
+    );
   }
+
 
 
   // get all users

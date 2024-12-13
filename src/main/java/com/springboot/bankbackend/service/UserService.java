@@ -10,7 +10,7 @@ public interface UserService {
 
   UserResponse updateProfile(UpdateProfileRequest request);
 
-  UserEntity getUserProfile();
+  UserResponse getUserProfile();
 
   List<UserResponse> getAllUsers();
   void deleteUser(Long id);
@@ -24,7 +24,7 @@ UserEntity findByUsername(String username);
   void addFriend(Long userId, Long friendId);
   List<UserResponse> getAllFriends(Long userId);
 
-  Long getTotalSteps(Long userId);
+//  Long getTotalSteps(Long userId);
 
   //Handling update the steps
   void updateStepsForDailyChallenge(Long userId, Long dailyChallengeId, Long steps);

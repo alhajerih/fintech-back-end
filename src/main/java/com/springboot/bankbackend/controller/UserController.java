@@ -32,8 +32,8 @@ public class UserController {
 
   // Get profile for logged-in user
   @GetMapping("/me")
-  public ResponseEntity<UserEntity> getCurrentUserProfile() {
-    UserEntity user = userService.getUserProfile();
+  public ResponseEntity<UserResponse> getCurrentUserProfile() {
+    UserResponse user = userService.getUserProfile();
     if(user != null) {
       return ResponseEntity.ok(user);
     } else {
