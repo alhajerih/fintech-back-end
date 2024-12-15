@@ -2,13 +2,15 @@ package com.springboot.bankbackend.bo;
 
 public class FriendChallengeResponseBO {
     private Long id;
+    private String name;
     private Long stepGoal;
     private String startTime; // In string format (converted from LocalTime)
     private String endTime;   // In string format (converted from LocalTime)
     private String date;      // In string format (converted from LocalDate)
 
-    public FriendChallengeResponseBO(Long id, Long stepGoal, String startTime, String endTime, String date) {
+    public FriendChallengeResponseBO(Long id,String name, Long stepGoal, String startTime, String endTime, String date) {
         this.id = id;
+        this.name=name;
         this.stepGoal = stepGoal;
         this.startTime = startTime;
         this.endTime = endTime;
@@ -17,6 +19,14 @@ public class FriendChallengeResponseBO {
 
     // Getters and Setters
 
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public Long getId() {
         return id;

@@ -11,6 +11,8 @@ public class FriendChallengeEntity {
 
     private Long stepGoal;
 
+    private String name;
+
     @Column(name = "start_time")
     private String startTime;
 
@@ -72,5 +74,13 @@ public class FriendChallengeEntity {
 
     public void setSteps(List<StepsEntity> steps) {
         this.steps = steps;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

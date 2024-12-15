@@ -1,13 +1,24 @@
 package com.springboot.bankbackend.bo;
 
 public class FriendChallengeRequestBO {
+
+    private String name;
     private Long stepGoal;
     private String startTime; // In string format (converted from LocalTime)
     private String endTime;   // In string format (converted from LocalTime)
     private String date;      // In string format (converted from LocalDate)
 
+
     // Getters and Setters
 
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public Long getStepGoal() {
         return stepGoal;

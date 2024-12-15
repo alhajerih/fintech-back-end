@@ -52,7 +52,7 @@ public class ChallengeServiceImpl implements ChallengeService {
     public List<FriendChallengeResponseBO> getAllFriendChallenges() {
         return friendChallengeRepository.findAll()
                 .stream()
-                .map(challenge-> new FriendChallengeResponseBO(challenge.getId(),challenge.getStepGoal(),
+                .map(challenge-> new FriendChallengeResponseBO(challenge.getId(),challenge.getName(),challenge.getStepGoal(),
                         challenge.getStartTime(),challenge.getEndTime(),challenge.getDate()))
                 .collect(Collectors.toList());
     }
@@ -65,6 +65,7 @@ public class ChallengeServiceImpl implements ChallengeService {
         challenge.setStartTime(friendChallengeRequestBO.getStartTime());
         challenge.setEndTime(friendChallengeRequestBO.getEndTime());
         challenge.setDate(friendChallengeRequestBO.getDate());
+        challenge.setName(friendChallengeRequestBO.getName());
 
         // Save the challenge entity to the database
         FriendChallengeEntity savedChallenge = friendChallengeRepository.save(challenge);
@@ -72,6 +73,7 @@ public class ChallengeServiceImpl implements ChallengeService {
         // Use the FriendChallengeResponseBO constructor to map the data explicitly
         return new FriendChallengeResponseBO(
                 savedChallenge.getId(),
+                savedChallenge.getName(),
                 savedChallenge.getStepGoal(),
                 savedChallenge.getStartTime(),
                 savedChallenge.getEndTime(),
