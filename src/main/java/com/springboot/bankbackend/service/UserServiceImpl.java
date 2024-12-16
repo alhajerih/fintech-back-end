@@ -81,21 +81,50 @@ userEntity.setRole(Roles.user);
 
   @Override
   public UserResponse updateProfile(UpdateProfileRequest request) {
+    // Retrieve the currently authenticated user
     UserEntity user = getAuthenticatedUser();
-    user.setUsername(request.getUsername());
-    user.setId(user.getId());
-    user.setPassword(bCryptPasswordEncoder.encode(request.getPassword()));
-    user.setAge(request.getAge());
-    user.setHeight(request.getHeight());
-    user.setWeight(request.getWeight());
-    user.setCity(request.getCity());
-    user.setPhoneNumber(request.getPhoneNumber());
+
+    // Update only non-null fields from the request
+    if (request.getUsername() != null) {
+      user.setUsername(request.getUsername());
+    }
+    if (request.getPassword() != null) {
+      user.setPassword(bCryptPasswordEncoder.encode(request.getPassword()));
+    }
+    if (request.getAge() != null) {
+      user.setAge(request.getAge());
+    }
+    if (request.getHeight() != null) {
+      user.setHeight(request.getHeight());
+    }
+    if (request.getWeight() != null) {
+      user.setWeight(request.getWeight());
+    }
+    if (request.getCity() != null) {
+      user.setCity(request.getCity());
+    }
+    if (request.getPhoneNumber() != null) {
+      user.setPhoneNumber(request.getPhoneNumber());
+    }
+
+    // Save the updated user entity
     user = userRepository.save(user);
-    UserResponse response = new UserResponse(user.getId(), user.getUsername(),user.getAge(),user.getCity(),
-            user.getTotalSteps(),user.getWeight(),user.getHeight(),user.getRole().toString());
+
+    // Create the response object
+    UserResponse response = new UserResponse(
+            user.getId(),
+            user.getUsername(),
+            user.getAge(),
+            user.getCity(),
+            user.getTotalSteps(),
+            user.getWeight(),
+            user.getHeight(),
+            user.getRole().toString()
+    );
 
     return response;
   }
+
 
 //  public UserResponse getProfile() {
 //    UserEntity user = getAuthenticatedUser();
