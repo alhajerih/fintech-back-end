@@ -1,5 +1,7 @@
 package com.springboot.bankbackend.bo;
 
+import java.util.List;
+
 public class UserResponse {
 
   private Long id;
@@ -10,7 +12,20 @@ public class UserResponse {
   private Integer weight;
   private Integer height;
 private String role;
+  private List<ChallengeStatus> challenges;
   //Constructor
+  public UserResponse(Long id, String username, Integer age, String city, Long totalSteps,Integer weight,Integer height,String role,List<ChallengeStatus> challenges) {
+    this.id = id;
+    this.username = username;
+    this.age = age;
+    this.city = city;
+    this.totalSteps = totalSteps;
+    this.weight = weight;
+    this.height = height;
+    this.role=role;
+    this.challenges=challenges;
+
+  }
   public UserResponse(Long id, String username, Integer age, String city, Long totalSteps,Integer weight,Integer height,String role) {
     this.id = id;
     this.username = username;
@@ -25,8 +40,20 @@ private String role;
 
 
 
+
+
   // Setter and Getter
 
+
+
+
+  public List<ChallengeStatus> getChallenges() {
+    return challenges;
+  }
+
+  public void setChallenges(List<ChallengeStatus> challenges) {
+    this.challenges = challenges;
+  }
 
   public Long getId() {
     return id;

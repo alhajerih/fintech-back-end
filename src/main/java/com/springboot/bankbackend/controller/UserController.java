@@ -144,4 +144,11 @@ public class UserController {
     return ResponseEntity.ok().build();
   }
 
+  @GetMapping("/getAllUsers")
+  public List<UserResponse> getAllProfiles() {
+    // Fetch all users from the admin service
+    return userService.getAllUsers();
+  }
+
+
 }

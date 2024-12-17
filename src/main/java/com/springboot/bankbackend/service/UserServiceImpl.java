@@ -13,6 +13,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -80,58 +81,102 @@ userEntity.setRole(Roles.user);
 
   @Override
   public UserResponse updateProfile(UpdateProfileRequest request) {
+    // Retrieve the currently authenticated user
     UserEntity user = getAuthenticatedUser();
-    user.setUsername(request.getUsername());
-    user.setId(user.getId());
-    user.setPassword(bCryptPasswordEncoder.encode(request.getPassword()));
-    user.setAge(request.getAge());
-    user.setHeight(request.getHeight());
-    user.setWeight(request.getWeight());
-    user.setCity(request.getCity());
-    user.setPhoneNumber(request.getPhoneNumber());
+
+    // Update only non-null fields from the request
+    if (request.getUsername() != null) {
+      user.setUsername(request.getUsername());
+    }
+    if (request.getPassword() != null) {
+      user.setPassword(bCryptPasswordEncoder.encode(request.getPassword()));
+    }
+    if (request.getAge() != null) {
+      user.setAge(request.getAge());
+    }
+    if (request.getHeight() != null) {
+      user.setHeight(request.getHeight());
+    }
+    if (request.getWeight() != null) {
+      user.setWeight(request.getWeight());
+    }
+    if (request.getCity() != null) {
+      user.setCity(request.getCity());
+    }
+    if (request.getPhoneNumber() != null) {
+      user.setPhoneNumber(request.getPhoneNumber());
+    }
+
+    // Save the updated user entity
     user = userRepository.save(user);
-    UserResponse response = new UserResponse(user.getId(), user.getUsername(),user.getAge(),user.getCity(),
-            user.getTotalSteps(),user.getWeight(),user.getHeight(),user.getRole().toString());
+
+    // Create the response object
+    UserResponse response = new UserResponse(
+            user.getId(),
+            user.getUsername(),
+            user.getAge(),
+            user.getCity(),
+            user.getTotalSteps(),
+            user.getWeight(),
+            user.getHeight(),
+            user.getRole().toString()
+    );
 
     return response;
   }
 
-  public UserResponse getProfile() {
-    UserEntity user = getAuthenticatedUser();
 
-    // Build the UserResponse with filtered transactions
-    UserResponse response = new UserResponse(user.getId(), user.getUsername(),user.getAge(),user.getCity(),
-            user.getTotalSteps(),user.getWeight(),user.getHeight(),user.getRole().toString());
-    return response;
-  }
+//  public UserResponse getProfile() {
+//    UserEntity user = getAuthenticatedUser();
+//
+//    // Build the UserResponse with filtered transactions
+//    UserResponse response = new UserResponse(user.getId(), user.getUsername(),user.getAge(),user.getCity(),
+//            user.getTotalSteps(),user.getWeight(),user.getHeight(),user.getRole().toString());
+//    return response;
+//  }
 
 
 
   public UserResponse getUserProfile() {
-    // Fetch the authenticated user
     UserEntity user = getAuthenticatedUser();
 
-    // Calculate total steps dynamically
+    // Fetch total steps dynamically
     Long totalSteps = stepsRepository.findTotalStepsByUserId(user.getId());
 
-    // Return a UserResponseBO that includes the total steps
+    // Fetch challenge and event completion statuses
+    List<StepsEntity> stepsEntities = stepsRepository.findByUserId(user.getId());
+    List<ChallengeStatus> challenges = stepsEntities.stream().map(steps -> new ChallengeStatus(
+            steps.getDailyChallenge() != null ? steps.getDailyChallenge().getId() : null,
+            steps.getDailyChallenge() != null ? steps.getDailyChallenge().getDateTime() : null,
+            steps.getEvent() != null ? steps.getEvent().getId() : null,
+            steps.getEvent() != null ? steps.getEvent().getLocationName() : null,
+            steps.getFriendChallenge() != null ? steps.getFriendChallenge().getId() : null,
+            steps.getFriendChallenge() != null ? steps.getFriendChallenge().getName() : null,
+
+            steps.getCompleted(),
+            steps.getSteps()
+    )).collect(Collectors.toList());
+
     return new UserResponse(
             user.getId(),
             user.getUsername(),
             user.getAge(),
             user.getCity(),
-            totalSteps != null ? totalSteps : 0L, // Handle null case
+            totalSteps != null ? totalSteps : 0L,
             user.getWeight(),
             user.getHeight(),
-            user.getRole().toString()
+            user.getRole().toString(),
+            challenges // Include challenge statuses with names
     );
   }
+
 
 
 
   // get all users
   @Override
   public List<UserResponse> getAllUsers() {
+
     return userRepository.findAll()
             .stream()
             .map(user -> new UserResponse(
@@ -143,6 +188,7 @@ userEntity.setRole(Roles.user);
                     user.getWeight(),
                     user.getHeight(),
                     user.getRole().toString()
+
             ))
             .collect(Collectors.toList());
   }
@@ -279,6 +325,7 @@ userEntity.setRole(Roles.user);
                     friend.getWeight(),
                     friend.getHeight(),
                     friend.getRole().toString() // Assuming getRole() returns an Enum
+
             ))
             .collect(Collectors.toList());
   }
@@ -300,6 +347,12 @@ userEntity.setRole(Roles.user);
     // Update the first record (or handle duplicates as needed)
     StepsEntity stepsEntity = stepsEntities.get(0);
     stepsEntity.setSteps(stepsEntity.getSteps() + steps);
+
+    // Check if target is met
+    if (stepsEntity.getSteps() >= stepsEntity.getDailyChallenge().getFixedPoints()) {
+      stepsEntity.setCompleted(true); // Mark as completed
+    }
+
     stepsRepository.save(stepsEntity);
   }
 
@@ -308,6 +361,10 @@ userEntity.setRole(Roles.user);
   @Override
   public void updateStepsForFriendChallenge(Long userId, Long friendChallengeId, Long steps) {
     List<StepsEntity> stepsEntities = stepsRepository.findByUserIdAndFriendChallengeId(userId, friendChallengeId);
+
+
+
+
 
     if (stepsEntities.isEmpty()) {
       throw new RuntimeException("No participation found for this friend challenge");
@@ -318,7 +375,20 @@ userEntity.setRole(Roles.user);
     }
 
     StepsEntity stepsEntity = stepsEntities.get(0);
+    // check if the friend challenge is completed
+    if (Boolean.TRUE.equals(stepsEntity.getCompleted())) {
+      throw new RuntimeException("Friend challenge is already completed");
+    }
+
+    // Update steps
     stepsEntity.setSteps(stepsEntity.getSteps() + steps);
+
+    // Check if target is met
+    if (stepsEntity.getSteps() >= stepsEntity.getFriendChallenge().getStepGoal()) {
+      stepsEntity.setCompleted(true); // Mark as completed
+    }
+
+    // Save the steps
     stepsRepository.save(stepsEntity);
   }
 
@@ -336,7 +406,18 @@ userEntity.setRole(Roles.user);
     }
 
     StepsEntity stepsEntity = stepsEntities.get(0);
+    // check the event is completed
+    if (Boolean.TRUE.equals(stepsEntity.getCompleted())) {
+      throw new RuntimeException("Event is already completed");
+    }
+    // add the steps
     stepsEntity.setSteps(stepsEntity.getSteps() + steps);
+
+    // Check if target is met
+    if (stepsEntity.getSteps() >= stepsEntity.getEvent().getFixedPoints()) {
+      stepsEntity.setCompleted(true); // Mark as completed
+    }
+    // save the steps
     stepsRepository.save(stepsEntity);
   }
 

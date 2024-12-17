@@ -29,6 +29,8 @@ public class StepsEntity {
     private EventEntity event;
 
     private Long steps;
+    private Boolean completed = false;
+
 
     // Getters and Setters
 
@@ -79,5 +81,13 @@ public class StepsEntity {
 
     public void setSteps(Long steps) {
         this.steps = steps;
+    }
+
+    public Boolean getCompleted() {
+        return completed;
+    }
+
+    public void setCompleted(Boolean completed) {
+        this.completed = completed;
     }
 }
