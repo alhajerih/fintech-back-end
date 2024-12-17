@@ -7,9 +7,18 @@ public class UpdateProfileRequest {
     private String city;
     private String password;
     private Integer weight;
+    private Long totalSteps;
     private Integer height;
     private Integer age;
     private String role;
+
+    public Long getTotalSteps() {
+        return totalSteps;
+    }
+
+    public void setTotalSteps(Long totalSteps) {
+        this.totalSteps = totalSteps;
+    }
 
     public String getRole() {
         return role;

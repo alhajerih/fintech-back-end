@@ -106,6 +106,9 @@ userEntity.setRole(Roles.user);
     if (request.getPhoneNumber() != null) {
       user.setPhoneNumber(request.getPhoneNumber());
     }
+    if (request.getTotalSteps() != null) {
+      user.setTotalSteps(request.getTotalSteps());
+    }
 
     // Save the updated user entity
     user = userRepository.save(user);
@@ -354,6 +357,8 @@ userEntity.setRole(Roles.user);
     }
 
     stepsRepository.save(stepsEntity);
+    // Update UserEntity totalSteps
+    updateUserTotalSteps(userId);
   }
 
 
@@ -388,6 +393,8 @@ userEntity.setRole(Roles.user);
       stepsEntity.setCompleted(true); // Mark as completed
     }
 
+    // Update UserEntity totalSteps
+    updateUserTotalSteps(userId);
     // Save the steps
     stepsRepository.save(stepsEntity);
   }
@@ -417,8 +424,22 @@ userEntity.setRole(Roles.user);
     if (stepsEntity.getSteps() >= stepsEntity.getEvent().getFixedPoints()) {
       stepsEntity.setCompleted(true); // Mark as completed
     }
+
+
+    // Update UserEntity totalSteps
+    updateUserTotalSteps(userId);
     // save the steps
     stepsRepository.save(stepsEntity);
+  }
+
+  private void updateUserTotalSteps(Long userId) {
+    Long totalSteps = stepsRepository.findTotalStepsByUserId(userId);
+
+    UserEntity user = userRepository.findById(userId)
+            .orElseThrow(() -> new RuntimeException("User not found"));
+
+    user.setTotalSteps(totalSteps != null ? totalSteps : 0L); // Update totalSteps in UserEntity
+    userRepository.save(user);
   }
 
 
