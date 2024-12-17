@@ -24,6 +24,7 @@ private String role;
     this.height = height;
     this.role=role;
     this.challenges=challenges;
+
   }
   public UserResponse(Long id, String username, Integer age, String city, Long totalSteps,Integer weight,Integer height,String role) {
     this.id = id;
@@ -42,6 +43,8 @@ private String role;
 
 
   // Setter and Getter
+
+
 
 
   public List<ChallengeStatus> getChallenges() {

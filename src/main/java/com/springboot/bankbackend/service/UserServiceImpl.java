@@ -152,7 +152,9 @@ userEntity.setRole(Roles.user);
             steps.getEvent() != null ? steps.getEvent().getLocationName() : null,
             steps.getFriendChallenge() != null ? steps.getFriendChallenge().getId() : null,
             steps.getFriendChallenge() != null ? steps.getFriendChallenge().getName() : null,
-            steps.getCompleted()
+
+            steps.getCompleted(),
+            steps.getSteps()
     )).collect(Collectors.toList());
 
     return new UserResponse(

@@ -7,12 +7,13 @@ public class ChallengeStatus {
     private String eventName;
     private Long friendChallengeId;
     private String friendChallengeName;
+    private  Long steps;
     private Boolean completed;
 
     public ChallengeStatus(Long dailyChallengeId, String dailyChallengeName,
                            Long eventId, String eventName,
                            Long friendChallengeId, String friendChallengeName,
-                           Boolean completed) {
+                           Boolean completed,Long steps) {
         this.dailyChallengeId = dailyChallengeId;
         this.dailyChallengeName = dailyChallengeName;
         this.eventId = eventId;
@@ -20,10 +21,19 @@ public class ChallengeStatus {
         this.friendChallengeId = friendChallengeId;
         this.friendChallengeName = friendChallengeName;
         this.completed = completed;
+        this.steps =steps;
     }
 
     // Getters and Setters
 
+
+    public Long getSteps() {
+        return steps;
+    }
+
+    public void setSteps(Long steps) {
+        this.steps = steps;
+    }
 
     public Long getDailyChallengeId() {
         return dailyChallengeId;
