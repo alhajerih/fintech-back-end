@@ -304,22 +304,31 @@ userEntity.setRole(Roles.user);
 
   @Override
   public void addFriend(Long userId, Long friendId) {
-    UserEntity user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
-    UserEntity friend = userRepository.findById(friendId).orElseThrow(() -> new RuntimeException("Friend not found"));
+    // Prevent adding oneself as a friend
+    if (userId.equals(friendId)) {
+      throw new IllegalArgumentException("You cannot add yourself as a friend.");
+    }
 
+    // Fetch user and friend
+    UserEntity user = userRepository.findById(userId)
+            .orElseThrow(() -> new RuntimeException("User not found"));
+    UserEntity friend = userRepository.findById(friendId)
+            .orElseThrow(() -> new RuntimeException("Friend not found"));
+
+    // Check if they are already friends
     if (user.getFriends().contains(friend)) {
       throw new RuntimeException("Friend already added");
     }
 
-    // Add the friend to the user's friend list
+    // Add each user to the other's friend list for mutual friendship
     user.getFriends().add(friend);
     friend.getFriends().add(user);
 
-    //save both user and his friends
+    // Save changes
     userRepository.save(user);
     userRepository.save(friend);
-
   }
+
 
   @Override
   public List<UserResponse> getAllFriends(Long userId) {
@@ -450,9 +459,15 @@ userEntity.setRole(Roles.user);
     UserEntity user = userRepository.findById(userId)
             .orElseThrow(() -> new RuntimeException("User not found"));
 
-    user.setTotalSteps(totalSteps != null ? totalSteps : 0L); // Update totalSteps in UserEntity
+    // Update total steps
+    user.setTotalSteps(totalSteps != null ? totalSteps : 0L);
+
+    // Update points based on total steps
+    user.setPoints(convertStepsToPoints(user.getTotalSteps()));
+
     userRepository.save(user);
   }
+
 
 
   @Override
@@ -472,6 +487,9 @@ userEntity.setRole(Roles.user);
                     steps.getCompleted()
             ))
             .collect(Collectors.toList());
+  }
+  private Long convertStepsToPoints(Long totalSteps) {
+    return totalSteps / 100; // Example: 1 point for every 1000 steps
   }
 
 
