@@ -37,7 +37,7 @@ private String role;
     this.points = points;
   }
 
-  public UserResponse(Long id, String username, Integer age, String city, Long totalSteps, Integer weight, Integer height, String role) {
+  public UserResponse(Long id, String username, Integer age, String city, Long totalSteps, Integer weight, Integer height, String role ,Long points) {
     this.id = id;
     this.username = username;
     this.age = age;
@@ -46,6 +46,7 @@ private String role;
     this.weight = weight;
     this.height = height;
     this.role=role;
+    this.points=points;
   }
 
 
