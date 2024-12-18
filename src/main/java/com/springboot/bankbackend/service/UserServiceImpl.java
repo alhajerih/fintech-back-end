@@ -110,6 +110,7 @@ userEntity.setRole(Roles.user);
       user.setTotalSteps(request.getTotalSteps());
     }
 
+
     // Save the updated user entity
     user = userRepository.save(user);
 
@@ -169,6 +170,8 @@ userEntity.setRole(Roles.user);
             user.getWeight(),
             user.getHeight(),
             user.getRole().toString(),
+            user.getPoints(),
+
             challenges // Include challenge statuses with names
     );
   }
@@ -190,6 +193,7 @@ userEntity.setRole(Roles.user);
                     user.getTotalSteps(),
                     user.getWeight(),
                     user.getHeight(),
+
                     user.getRole().toString()
 
             ))
@@ -432,6 +436,8 @@ userEntity.setRole(Roles.user);
     stepsRepository.save(stepsEntity);
   }
 
+
+  //Helper function
   private void updateUserTotalSteps(Long userId) {
     Long totalSteps = stepsRepository.findTotalStepsByUserId(userId);
 
