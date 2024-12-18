@@ -11,10 +11,11 @@ public class UserResponse {
   private Long totalSteps;
   private Integer weight;
   private Integer height;
+  private Long points;
 private String role;
   private List<ChallengeStatus> challenges;
   //Constructor
-  public UserResponse(Long id, String username, Integer age, String city, Long totalSteps,Integer weight,Integer height,String role,List<ChallengeStatus> challenges) {
+  public UserResponse(Long id, String username, Integer age, String city, Long totalSteps,Integer weight,Integer height,String role,Long points,List<ChallengeStatus> challenges) {
     this.id = id;
     this.username = username;
     this.age = age;
@@ -23,10 +24,20 @@ private String role;
     this.weight = weight;
     this.height = height;
     this.role=role;
+    this.points=points;
     this.challenges=challenges;
 
   }
-  public UserResponse(Long id, String username, Integer age, String city, Long totalSteps,Integer weight,Integer height,String role) {
+
+  public Long getPoints() {
+    return points;
+  }
+
+  public void setPoints(Long points) {
+    this.points = points;
+  }
+
+  public UserResponse(Long id, String username, Integer age, String city, Long totalSteps, Integer weight, Integer height, String role ,Long points) {
     this.id = id;
     this.username = username;
     this.age = age;
@@ -35,6 +46,7 @@ private String role;
     this.weight = weight;
     this.height = height;
     this.role=role;
+    this.points=points;
   }
 
 

@@ -74,7 +74,7 @@ userEntity.setRole(Roles.user);
     UserResponse response =
         new UserResponse(userEntity.getId(), userEntity.getUsername(),userEntity.getAge(),
                 userEntity.getCity(),userEntity.getTotalSteps(),
-                userEntity.getWeight(),userEntity.getHeight(),userEntity.getRole().toString()
+                userEntity.getWeight(),userEntity.getHeight(),userEntity.getRole().toString(),userEntity.getPoints()
         );
     return response;
   }
@@ -109,6 +109,10 @@ userEntity.setRole(Roles.user);
     if (request.getTotalSteps() != null) {
       user.setTotalSteps(request.getTotalSteps());
     }
+    if (request.getPoints() != null) {
+      user.setPoints(request.getPoints());
+    }
+
 
     // Save the updated user entity
     user = userRepository.save(user);
@@ -122,7 +126,8 @@ userEntity.setRole(Roles.user);
             user.getTotalSteps(),
             user.getWeight(),
             user.getHeight(),
-            user.getRole().toString()
+            user.getRole().toString(),
+            user.getPoints()
     );
 
     return response;
@@ -169,6 +174,8 @@ userEntity.setRole(Roles.user);
             user.getWeight(),
             user.getHeight(),
             user.getRole().toString(),
+            user.getPoints(),
+
             challenges // Include challenge statuses with names
     );
   }
@@ -190,7 +197,8 @@ userEntity.setRole(Roles.user);
                     user.getTotalSteps(),
                     user.getWeight(),
                     user.getHeight(),
-                    user.getRole().toString()
+                    user.getRole().toString(),
+                    user.getPoints()
 
             ))
             .collect(Collectors.toList());
@@ -221,7 +229,8 @@ userEntity.setRole(Roles.user);
                     user.getTotalSteps(),
                     user.getWeight(),
                     user.getHeight(),
-                    user.getRole().toString()
+                    user.getRole().toString(),
+                    user.getPoints()
             ))
             .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
 
@@ -327,7 +336,8 @@ userEntity.setRole(Roles.user);
                     friend.getTotalSteps(),
                     friend.getWeight(),
                     friend.getHeight(),
-                    friend.getRole().toString() // Assuming getRole() returns an Enum
+                    friend.getRole().toString(), // Assuming getRole() returns an Enum
+                    friend.getPoints()
 
             ))
             .collect(Collectors.toList());
@@ -432,6 +442,8 @@ userEntity.setRole(Roles.user);
     stepsRepository.save(stepsEntity);
   }
 
+
+  //Helper function
   private void updateUserTotalSteps(Long userId) {
     Long totalSteps = stepsRepository.findTotalStepsByUserId(userId);
 
