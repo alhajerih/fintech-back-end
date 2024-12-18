@@ -455,4 +455,24 @@ userEntity.setRole(Roles.user);
   }
 
 
+  @Override
+  public List<ParticipantProgress> getFriendChallengeProgress(Long friendChallengeId) {
+    List<StepsEntity> stepsEntities = stepsRepository.findByFriendChallengeId(friendChallengeId);
+
+    if (stepsEntities.isEmpty()) {
+      throw new RuntimeException("No participants found for this friend challenge");
+    }
+
+    return stepsEntities.stream()
+            .map(steps -> new ParticipantProgress(
+                    steps.getUser().getId(),
+                    steps.getUser().getUsername(),
+                    steps.getSteps(),
+                    steps.getFriendChallenge().getStepGoal(),
+                    steps.getCompleted()
+            ))
+            .collect(Collectors.toList());
+  }
+
+
 }

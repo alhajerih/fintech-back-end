@@ -15,6 +15,7 @@ public interface StepsRepository extends JpaRepository<StepsEntity,Long> {
     List<StepsEntity> findByUserIdAndDailyChallengeId(Long userId, Long dailyChallengeId);
     List<StepsEntity> findByUserIdAndFriendChallengeId(Long userId, Long friendChallengeId);
     List<StepsEntity> findByUserIdAndEventId(Long userId, Long eventId);
+    List<StepsEntity> findByFriendChallengeId(Long friendChallengeId);
 
     @Query("SELECT SUM(s.steps) FROM StepsEntity s WHERE s.user.id = :userId")
     Long findTotalStepsByUserId(@Param("userId") Long userId);

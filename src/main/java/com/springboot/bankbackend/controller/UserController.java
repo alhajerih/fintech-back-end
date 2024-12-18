@@ -150,5 +150,12 @@ public class UserController {
     return userService.getAllUsers();
   }
 
+  @GetMapping("/challenges/friend/{friendChallengeId}/progress")
+  public ResponseEntity<List<ParticipantProgress>> getFriendChallengeProgress(@PathVariable Long friendChallengeId) {
+    List<ParticipantProgress> progress = userService.getFriendChallengeProgress(friendChallengeId);
+    return ResponseEntity.ok(progress);
+  }
+
+
 
 }

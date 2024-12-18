@@ -16,7 +16,7 @@ public interface UserService {
   void deleteUser(Long id);
 
   UserResponse getUserById(Long id);
-
+  List<ParticipantProgress> getFriendChallengeProgress(Long friendChallengeId);
   void participateInFriendChallenge(Long userId, Long challengeId, List<Long> friendIds);
   void participateInEvent(Long userId,Long eventId);
   void participateInDailyChallenge(Long userId, Long dailyChallengeId);
