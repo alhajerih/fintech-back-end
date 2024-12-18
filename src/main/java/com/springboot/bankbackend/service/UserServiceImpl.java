@@ -459,9 +459,15 @@ userEntity.setRole(Roles.user);
     UserEntity user = userRepository.findById(userId)
             .orElseThrow(() -> new RuntimeException("User not found"));
 
-    user.setTotalSteps(totalSteps != null ? totalSteps : 0L); // Update totalSteps in UserEntity
+    // Update total steps
+    user.setTotalSteps(totalSteps != null ? totalSteps : 0L);
+
+    // Update points based on total steps
+    user.setPoints(convertStepsToPoints(user.getTotalSteps()));
+
     userRepository.save(user);
   }
+
 
 
   @Override
@@ -481,6 +487,9 @@ userEntity.setRole(Roles.user);
                     steps.getCompleted()
             ))
             .collect(Collectors.toList());
+  }
+  private Long convertStepsToPoints(Long totalSteps) {
+    return totalSteps / 100; // Example: 1 point for every 1000 steps
   }
 
 
