@@ -14,7 +14,7 @@ Check it out here:
 
 This is the backend API built with **Java Spring Boot** that powers the StepWise app.
 
-🔗 [Backend Repo](https://github.com/alhajerin/fintech-back-end)
+🔗 [Backend Repo](https://github.com/alhajerih/fintech-back-end)
 
 ---
 
